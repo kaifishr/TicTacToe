@@ -75,7 +75,9 @@ $$
 \circ & \times & \times \\
 \end{array}
 \end{aligned}
+
 =
+
 \begin{aligned}
 &\begin{array}{c|c|c}
 -1 & 0 & -1 \\
