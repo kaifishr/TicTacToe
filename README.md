@@ -104,28 +104,7 @@ continue
 
 [Playing Atari with Deep Reinforcement Learning](https://arxiv.org/abs/1312.5602) showed that deep neural networks are a powerful option to represent reinforcement learning models that map states to (a distribution over) actions.
 
-The policy network receives a state vector $s$ holding nine numbers ($-1$, $0$, or $1$) and uses a softmax output layer to return a probability distribution over the nine possible actions.
-
-$$
-\begin{aligned}
-&\begin{array}{c|c|c}
-\circ &  & \circ \\
-\hline
-& \times &  \\
-\hline
-\circ & \times & \times \\
-\end{array}
-\end{aligned} =
-\begin{aligned}
-&\begin{array}{c|c|c}
--1 & 0 & -1 \\
-\hline
-0 & 1 & 0 \\
-\hline
--1 & 1 & 1 \\
-\end{array}
-\end{aligned}
-$$
+The policy network receives a state vector $s$ holding nine numbers ($-1$, $0$, or $1$) and uses a softmax output layer to return a probability distribution over the nine possible actions. Using the example from above we can illustrate this as follows: 
 
 $$
 \begin{pmatrix}
@@ -152,6 +131,7 @@ $$
 1\\
 1
 \end{pmatrix}
+; \theta
 \end{pmatrix}
 $$
 
