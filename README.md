@@ -1,4 +1,4 @@
-# TicTacToe
+# TicTacToe 
 
 $$
 \begin{aligned}
@@ -17,7 +17,7 @@ A minimal environment equipped with reinforcement learning algorithms to train a
 
 ## Introduction
 
-Tic-tac-toe is an instance of a perfect information, turn-based two player [**m,n,k-game**]( https://en.wikipedia.org/wiki/M,n,k-game) and is also called a **k-in-a-row** game on an **m-by-n** board. For Tic-tac-toe, $m=n=k=3$.
+Tic-tac-toe is an instance of a perfect information, turn-based two player [**m,n,k-game**]( https://en.wikipedia.org/wiki/M,n,k-game) and is also called a **k-in-a-row** game on an **m-by-n** board. For Tic-tac-toe, these variables are $m=n=k=3$.
 
 In this implementation, two agents alternate taking turns on an $m \times n$ board until one of them gets $k$ in a row and wins the game. The current implementations supports any positive integer for $m,n,k$ with $m=n=k$.
 
@@ -34,11 +34,6 @@ To be more specific, let's use the game of Tic-tac-toe as an example. The dynami
 
 An agent ($x$) observes a **state** that is represented by the current board configuration (positions of $\times$ and $\circ$). An example state can look as follows:
 
-```
-o . o
-. x .
-o x x
-```
 $$
 \begin{aligned}
 &\begin{array}{c|c|c}
@@ -59,57 +54,126 @@ The agent's action is based on a **policy**. A policy is a function that maps st
 
 $$\text{action}= \text{policy}(\text{state}; \theta)$$
 
-It should be noted, that for a given state, the agent's best choice for an action depends only on the current state and may not depend on past states. Considering only information provided by the current state for the next action is known as a **Markow decision process** (MDP) 
+During the training, the agent interacts with the environment and the selected optimization method, adjusts the agent's policy in order to *maximize the expectation of future rewards*.
+
+It should be noted, that for a given state, the agent's best choice for an action depends only on the current state and may not depend on past states. Considering only information provided by the current state for the next action is known as a [Markow decision process](https://en.wikipedia.org/wiki/Markov_decision_process) (MDP).
+
+
+### (TODO) Tic-tac-toe Environment
+
+This section describes the details of the Tic-tac-toe environment as well as the action and reward scheme.
+
+The state that the agent observes are the positions of crosses ($\times = 1$), circles ($\circ = -1$, the opponent), and empty fields ($0$) on the board.
+
+$$
+\begin{aligned}
+&\begin{array}{c|c|c}
+\circ &  & \circ \\
+\hline
+& \times &  \\
+\hline
+\circ & \times & \times \\
+\end{array}
+\end{aligned}
+=
+\begin{aligned}
+&\begin{array}{c|c|c}
+-1 & 0 & -1 \\
+\hline
+0 & 1 & 0 \\
+\hline
+-1 & 1 & 1 \\
+\end{array}
+\end{aligned}
+$$
+
+Based on that state, the agent selects one out of nine actions. Actions are determined by the agent's current policy. Here, the policy is modeled as a neural network with nine output neurons. The actions are integer-valued and retrieved by applying the argmax function to the network's output neurons.
+
+Even though there are nine actions available, not all moves are allowed. If the action is legal, the opponent makes a move and the agent observes the new state.
+
+States where the game is won come with a reward of +1. Loosing the game or marking already occupied areas results in a reward of -1. Punishing wrong moves encourages the agent to learn only legal moves over time. All other states (including draws) yield a reward of 0. 
 
 ---
+---
 
-During the training, the agent interacts with its environment, and the learner, the selected optimization method, adjusts the policy in order to *maximize the expectation of future rewards*.
+continue
+
+---
+---
+
+### (TODO) Policy Network
+
+[Playing Atari with Deep Reinforcement Learning](https://arxiv.org/abs/1312.5602) showed that deep neural networks are a powerful option to represent reinforcement learning models that map states to (a distribution over) actions.
+
+The policy network receives a state vector $s$ holding nine numbers ($-1$, $0$, or $1$) and uses a softmax output layer to return a probability distribution over the nine possible actions.
+
+$$
+\begin{aligned}
+&\begin{array}{c|c|c}
+\circ &  & \circ \\
+\hline
+& \times &  \\
+\hline
+\circ & \times & \times \\
+\end{array}
+\end{aligned}
+=
+\begin{aligned}
+&\begin{array}{c|c|c}
+-1 & 0 & -1 \\
+\hline
+0 & 1 & 0 \\
+\hline
+-1 & 1 & 1 \\
+\end{array}
+\end{aligned}
+$$
+
+$$
+\begin{pmatrix}
+0.0\\
+0.8\\
+0.0\\
+0.1\\
+0.0\\
+0.1\\
+0.0\\
+0.0\\
+0.0
+\end{pmatrix}
+= \text{policy}
+\begin{pmatrix}
+\begin{pmatrix}
+-1\\
+0\\
+-1\\
+0\\
+1\\
+0\\
+-1\\
+1\\
+1
+\end{pmatrix}
+\end{pmatrix}
+$$
+
+We can choose an action by either choosing the action with the highest probability or by sampling from the output probability distribution.
+
+
+### (TODO) Policy Gradients
 
 The policy is a neural network that outputs probabilities over `size**2` possible actions. Thus, we can interpret the resulting probabilities as a probabilistic policy.
+...
 
 
----
----
----
----
-
-
-### Tic-tac-toe
+### (TODO) Deep Q-Learning
 
 ...
 
 
-### Policy Gradients
-
-...
 
 
-### Deep Q-Learning
-
-...
-
-
-Available actions are the moves the player is allowed to make.
-
-After the player's (agent's) action, the opponent makes a move, and the environment returns the resulting game state to the agent.
-
-States where the game is won come with a reward of +1, and -1 if the game is lost. All other states (including draws) yield a reward of 0.
-
-In short:
-
-Action: The agent's move. Placing a cross or cicle (-1, 1).
-State: State of playing field after opponent's move.
-Reward: 1 (won), -1 (lost), 0 (otherwise).
-
-To encourage the agent to make legal moves, illegal moves (marking already occupied areas) instantly result in the loss of the game. 
-
-This framework allows to train agents using a self-play training strategy.
-
-The agents are being trained *while* they are interacting with a dynamic world or environment. 
-
-
-
-## Episodic Learning
+## (TODO) Episodic Learning
 
 - Train for one episode, observe reward, learn, repeat.
 - Here, one episode is a game of Tic-Tac-Toe.
@@ -118,21 +182,24 @@ The agents are being trained *while* they are interacting with a dynamic world o
 As an aside, RL agents can theoretically learn in an online mode, where they continuously update their model while they explore their environment. Aside end.
 
 
-## Self-play
+## (TODO) Self-play
+
+
+This framework allows to train agents using a self-play training strategy.
 
 Instead of an algorithmic player, we train two agents and let them play against themselves. Alternatively, we train an agent until it beats another randomly initialized player. We then make the trained agent the new opponent and start again.
 
 To ensure that the agent generalizes well, it is a good strategy to have an ensemble of opponent agents and sample one at random for each episode. 
 
 
-## References
+## (TODO) References
 
 
 ## TODO
 
 - Policy gradients
 - Deep-Q
-- Evolutionary strategies
+- Evolutionary strategies (maybe not)
 - Generalize implementation for m,n,k-games.
 
 
