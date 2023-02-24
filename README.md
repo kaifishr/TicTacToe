@@ -100,6 +100,7 @@ continue
 ---
 ---
 
+
 ### (TODO) Policy Network
 
 [Playing Atari with Deep Reinforcement Learning](https://arxiv.org/abs/1312.5602) showed that deep neural networks are a powerful option to represent reinforcement learning models that map states to (a distribution over) actions.
@@ -108,34 +109,41 @@ The policy network receives a state vector $s$ holding nine numbers ($-1$, $0$, 
 
 $$
 \begin{pmatrix}
-0.0\\
-0.8\\
-0.0\\
-0.1\\
-0.0\\
-0.1\\
-0.0\\
-0.0\\
-0.0
+0.0 & 0.8 & 0.0\\
+0.1 & 0.0 & 0.1\\
+0.0 & 0.0 & 0.0
 \end{pmatrix}
 = \text{policy}
 \begin{pmatrix}
 \begin{pmatrix}
--1\\
-0\\
--1\\
-0\\
-1\\
-0\\
--1\\
-1\\
-1
+-1 & 0 & -1 \\
+0 & 1 & 0 \\
+-1 & 1 & 1
 \end{pmatrix}
 ; \theta
 \end{pmatrix}
 $$
 
 We can choose an action by either choosing the action with the highest probability or by sampling from the output probability distribution.
+
+
+## Episodic Learning
+
+In the framework of reinforcement learning, an agent can theoretically learn a task in an online mode ([see this example](https://arxiv.org/pdf/2208.07860.pdf)), where the agent's policy (the neural network) is continuously updated. However, in practice, this can lead to unpredictable behavior of the agent that is difficult to control.
+
+Instead of updating the agent's policy at every time step, a common approach is to update the policy between episodes. An episode can be defined as a task we want the agent to learn. For this project, one episode is a game of Tic-tac-toe, but it can also be the task of [landing a rocket booster autonomously](https://github.com/kaifishr/RocketLander).
+
+During an episode, the agent takes actions according to its current policy and collects the rewards. We then use this information to update the policy's parameters and start a new episode.
+
+
+## (TODO) Self-play
+
+
+This framework allows to train agents using a self-play training strategy.
+
+Instead of an algorithmic player, we train two agents and let them play against themselves. Alternatively, we train an agent until it beats another randomly initialized player. We then make the trained agent the new opponent and start again.
+
+To ensure that the agent generalizes well, it is a good strategy to have an ensemble of opponent agents and sample one at random for each episode. 
 
 
 ### (TODO) Policy Gradients
@@ -148,26 +156,6 @@ The policy is a neural network that outputs probabilities over `size**2` possibl
 
 ...
 
-
-
-
-## (TODO) Episodic Learning
-
-- Train for one episode, observe reward, learn, repeat.
-- Here, one episode is a game of Tic-Tac-Toe.
-- This procedure results in a fixed policy for production.
-
-As an aside, RL agents can theoretically learn in an online mode, where they continuously update their model while they explore their environment. Aside end.
-
-
-## (TODO) Self-play
-
-
-This framework allows to train agents using a self-play training strategy.
-
-Instead of an algorithmic player, we train two agents and let them play against themselves. Alternatively, we train an agent until it beats another randomly initialized player. We then make the trained agent the new opponent and start again.
-
-To ensure that the agent generalizes well, it is a good strategy to have an ensemble of opponent agents and sample one at random for each episode. 
 
 
 ## (TODO) References
