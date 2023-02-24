@@ -129,21 +129,18 @@ We can choose an action by either choosing the action with the highest probabili
 
 ## Episodic Learning
 
-In the framework of reinforcement learning, an agent can theoretically learn a task in an online mode ([see this example](https://arxiv.org/pdf/2208.07860.pdf)), where the agent's policy (the neural network) is continuously updated. However, in practice, this can lead to unpredictable behavior of the agent that is difficult to control.
+In a reinforcement learning setting, an agent can theoretically learn a task in an online mode ([see this example](https://arxiv.org/pdf/2208.07860.pdf)), where the agent's policy (the neural network) is continuously updated. However, in practice, this can lead to unpredictable behavior of the agent that is difficult to control.
 
 Instead of updating the agent's policy at every time step, a common approach is to update the policy between episodes. An episode can be defined as a task we want the agent to learn. For this project, one episode is a game of Tic-tac-toe, but it can also be the task of [landing a rocket booster autonomously](https://github.com/kaifishr/RocketLander).
 
 During an episode, the agent takes actions according to its current policy and collects the rewards. We then use this information to update the policy's parameters and start a new episode.
 
 
-## (TODO) Self-play
+## Self-play
 
+This framework allows to train agents using a self-play training strategy. Instead of an algorithmic player as opponent, we train two agents at the same time and let them play against themselves. Alternatively, we can train an agent several episodes until it beats a weaker version of itself for number of times. We then make the trained agent the new opponent and start over again. 
 
-This framework allows to train agents using a self-play training strategy.
-
-Instead of an algorithmic player, we train two agents and let them play against themselves. Alternatively, we train an agent until it beats another randomly initialized player. We then make the trained agent the new opponent and start again.
-
-To ensure that the agent generalizes well, it is a good strategy to have an ensemble of opponent agents and sample one at random for each episode. 
+TODO To ensure that the agent generalizes well, it is a good strategy to have an ensemble of opponent agents and sample one at random for each episode. 
 
 
 ### (TODO) Policy Gradients
