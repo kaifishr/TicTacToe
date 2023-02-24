@@ -59,7 +59,7 @@ During the training, the agent interacts with the environment and the selected o
 It should be noted, that for a given state, the agent's best choice for an action depends only on the current state and may not depend on past states. Considering only information provided by the current state for the next action is known as a [Markow decision process](https://en.wikipedia.org/wiki/Markov_decision_process) (MDP).
 
 
-### (TODO) Tic-tac-toe Environment
+### Tic-tac-toe Environment
 
 This section describes the details of the Tic-tac-toe environment as well as the action and reward scheme.
 
@@ -92,16 +92,8 @@ Even though there are nine actions available, not all moves are allowed. If the 
 
 States where the game is won come with a reward of +1. Loosing the game or marking already occupied areas results in a reward of -1. Punishing wrong moves encourages the agent to learn only legal moves over time. All other states (including draws) yield a reward of 0. 
 
----
----
 
-continue
-
----
----
-
-
-### (TODO) Policy Network
+### Policy Network
 
 [Playing Atari with Deep Reinforcement Learning](https://arxiv.org/abs/1312.5602) showed that deep neural networks are a powerful option to represent reinforcement learning models that map states to (a distribution over) actions.
 
@@ -155,7 +147,11 @@ The policy is a neural network that outputs probabilities over `size**2` possibl
 
 
 
-## (TODO) References
+## References
+
+* [A Crash Course on Reinforcement Learning](https://arxiv.org/abs/2103.04910)
+
+* [Lecture 13: Reinforcement learning](https://mlvu.github.io/lecture13/)
 
 
 ## TODO
