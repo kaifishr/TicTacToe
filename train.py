@@ -13,14 +13,15 @@ from src.tictactoe import Environment
 from src.tictactoe import TicTacToe
 from src.model import Model
 from src.policy_gradients import PolicyGradients
+from src.utils import save_checkpoint
+from src.utils import set_random_seed
 
 
 def train_policy_gradients(env: Environment, model_a: nn.Module, model_b: nn.Module) -> None:
     """Train agents with Policy Gradients."""
 
     # Trainer
-    # Good parameters!
-    num_episodes = 500000
+    num_episodes = 100000
     learning_rate = 0.0005
     gamma = 1.0
 
@@ -31,12 +32,8 @@ def train_policy_gradients(env: Environment, model_a: nn.Module, model_b: nn.Mod
 
     for episode in range(num_episodes):
 
-        events_a = dict(states=[], actions=[], rewards=[], new_states=[], dones=[])
-        events_b = dict(states=[], actions=[], rewards=[], new_states=[], dones=[])
-
         # Let the agents compete. Rollout one episode.
         if random.random() > 0.5:
-            # if episode % 2 == 0:
             events_a, events_b = env.episode(model_a, model_b)
         else:
             events_b, events_a = env.episode(model_b, model_a)
@@ -53,19 +50,18 @@ def train_policy_gradients(env: Environment, model_a: nn.Module, model_b: nn.Mod
 
     writer.close()
 
-    print("Model a")
-    env.play(model=model_a)
-    print("Model b")
-    env.play(model=model_b)
+    save_checkpoint(model=agent_a.model, model_name="agent_a")
+    save_checkpoint(model=agent_b.model, model_name="agent_b")
 
 
 if __name__ == "__main__":
 
-    # Playfield
+    set_random_seed(seed=42)
+
+    # Playing field size
     size = 3
 
     env = TicTacToe(size=size)
-
     model_a = Model(size=size)
     model_b = Model(size=size)
 

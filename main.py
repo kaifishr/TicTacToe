@@ -1,7 +1,8 @@
-import torch
-import random
-
+"""Main file to start training or playing."""
 from src.tictactoe import TicTacToe
+
+# from src.play import PlayGame
+# from src.train import Trainer
 
 
 if __name__ == "__main__":

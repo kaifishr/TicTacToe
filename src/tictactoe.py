@@ -11,7 +11,6 @@ Typical usage:
 
 """
 import copy
-import random
 import torch
 import torch.nn as nn
 
@@ -21,6 +20,13 @@ class Environment:
 
     def __init__(self) -> None:
         """Initializes Environment."""
+        self.debug = False
+
+
+# class MNKGame(Environment):
+#     """mnk-game base class."""
+#     def __init__(self) -> None:
+#         """Initializes mnk-game class."""
 
 
 class TicTacToe(Environment):
@@ -32,15 +38,15 @@ class TicTacToe(Environment):
     o|x|o
     x|o|x
 
-    # Action Space
+    # Action space
 
     The action is an integer which can take values [0, size**2 - 1] indicating
     where the agent marks the field with either 1 (x) or -1 (o).
 
-    # Observation Space
+    # Observation space
 
     The observation is a PyTorch tensor with shape (size, size) representing the
-    playfield.
+    playing field.
 
     # Rewards
 
@@ -49,12 +55,12 @@ class TicTacToe(Environment):
         0 if game is draw
         -1 for a wrong move
 
-    # Initial State
+    # Initial state
 
-    An empty playfield represented by a PyTorch tensor with shape (size, size)
+    An empty playing field represented by a PyTorch tensor with shape (size, size)
     initialized with zeros.
 
-    # Episode End
+    # Episode end
 
     The episode ends if any of the following events occur:
 
@@ -192,7 +198,7 @@ class TicTacToe(Environment):
                 # No reward if game is a draw.
                 reward = 0.0
             else:
-                # Zero / positive reward for correctly marking a field.
+                # No reward for correctly marking a field.
                 reward = 0.0
         else:  # Negative reward and end of game if occupied field is marked.
             reward = -1.0
@@ -235,7 +241,7 @@ class TicTacToe(Environment):
             events_a["new_states"].append(copy.deepcopy(new_state))
             events_a["dones"].append(done)
 
-            # TODO: Check reward scheme: Make sure player gets negative reward if other player wins.
+            # Player gets negative reward if other player wins.
             if done and reward == 1:
                 events_b["rewards"][-1] = -1
 
@@ -253,7 +259,7 @@ class TicTacToe(Environment):
                 events_b["new_states"].append(copy.deepcopy(new_state))
                 events_b["dones"].append(done)
 
-                # TODO: Add reward -1 to player that lost the game.
+                # Player gets negative reward if other player wins.
                 if done and reward == 1:
                     events_a["rewards"][-1] = -1
 
@@ -261,50 +267,67 @@ class TicTacToe(Environment):
 
         return events_a, events_b
 
-    def play(self, model: nn.Module, num_rounds: int = 10) -> None:
+    def play(self, model: nn.Module) -> None:
         """Plays game against an agent."""
 
-        for _ in range(num_rounds):
-            state = self.reset()
+        print("Game started.\n")
+
+        done = False
+        state = self.reset()
+
+        while not done:
+
+            # Machine
+            print("Agent")
+            action = model.predict(state)
+            state, reward, done = self.step(action=action, player=-1)
+
             print(self)
 
-            done = False
+            if self.debug:
+                print(f"{state = }")
+                print(f"{reward = }")
+                print(f"{done = }")
 
-            while not done:
+            if done:
+                if reward == 1:
+                    print("You lose.")
+                elif reward == -1:
+                    print("Illegal move. Computer lost.")
+                else:
+                    print("Draw.")
 
-                # Machine
-                print("Agent")
-                player = -1
-                action = model.predict(state)
-                state, reward, done = self.step(action=action, player=player)
+            # Human
+            if not done:
+                action = int(input("Enter an index: "))
+                state, reward, done = self.step(action=action, player=1)
+
                 print(self)
+
+                if self.debug:
+                    print(f"{state = }")
+                    print(f"{reward = }")
+                    print(f"{done = }")
 
                 if done:
                     if reward == 1:
-                        print("You lose.")
-                    if reward == -1:
-                        print("Computer lost.")
-
-                # Human
-                if not done:
-                    player = 1
-                    action = int(input("Enter an index: "))
-                    state, reward, done = self.step(action=action, player=player)
-                    print(self)
-
-                    if done:
-                        if reward == 1:
-                            print("You win.")
-                        if reward == -1:
-                            print("Computer won.")
+                        print("You win.")
+                    elif reward == -1:
+                        print("Illegal move. Computer won.")
+                    else:
+                        print("Draw.")
 
     def reset(self) -> torch.Tensor:
-        """Resets the playflied."""
+        """Resets the playing flied."""
         self.field = torch.zeros(size=(self.size, self.size), dtype=torch.long)
         state = self.field.float()[None, ...]
         return state
 
     def __repr__(self) -> str:
         """Prints playing field."""
-        frmt = "{:^3}" * self.size
-        return "\n" + "\n".join(frmt.format(*row) for row in self.field.tolist()) + "\n"
+        # prototype = "{:^3}" * self.size
+        # return "\n" + "\n".join(prototype.format(*row) for row in self.field.tolist()) + "\n"
+        prototype = "{:3}" * self.size
+        representation = "\n".join(prototype.format(*row) for row in self.field.tolist())
+        representation = representation.replace("-1", " x").replace("1", "o").replace("0", ".")
+        return "\n" + representation + "\n"

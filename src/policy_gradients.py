@@ -29,22 +29,23 @@ class PolicyGradients:
         rewards = events["rewards"]
 
         reward_sum = 0.0
-        rewards_to_go = []
+        discounted_rewards = []
 
+        # TODO: Get rid of for-loop
         for reward in rewards[::-1]:
             reward_sum = reward + self.gamma * reward_sum
-            rewards_to_go.append(reward_sum)
+            discounted_rewards.append(reward_sum)
 
-        rewards_to_go.reverse()
-        # rewards_to_go = rewards_to_go[::-1]
+        discounted_rewards.reverse()
+        # discounted_rewards = discounted_rewards[::-1]
 
-        rewards_to_go = torch.tensor(rewards_to_go)
+        discounted_rewards = torch.tensor(discounted_rewards)
 
-        # if len(rewards_to_go) > 1:
-        #     std = torch.std(rewards_to_go)
+        # if len(discounted_rewards) > 1:
+        #     std = torch.std(discounted_rewards)
         #     if std != 0:
-        #         mean = torch.mean(rewards_to_go)
-        #         rewards_to_go = (rewards_to_go - mean) / (std + 1e-5)  # the sample weight
+        #         mean = torch.mean(discounted_rewards)
+        #         discounted_rewards = (discounted_rewards - mean) / (std + 1e-5)  # the sample weight
 
         states = torch.vstack(states)
         target_actions = F.one_hot(torch.tensor(actions), num_classes=self.size**2).float()
@@ -53,7 +54,7 @@ class PolicyGradients:
         self.optimizer.zero_grad()
         output_actions = self.model(states)
         loss = self.criterion(output_actions, target_actions)
-        loss = loss * rewards_to_go
+        loss = loss * discounted_rewards
         loss = loss.mean()
         loss.backward()
         self.optimizer.step()
