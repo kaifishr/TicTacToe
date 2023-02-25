@@ -53,7 +53,7 @@ class Model(nn.Module):
         )
 
     @torch.no_grad()  # TODO: Move this to PolicyGradients?
-    def predict(self, state: torch.Tensor) -> int:
+    def predict(self, state: torch.Tensor) -> int:  # predict -> get_action
         """Predicts action given a state.
 
         Args:
