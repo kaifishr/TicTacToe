@@ -52,7 +52,7 @@ class Model(nn.Module):
             nn.Softmax(dim=-1),
         )
 
-    @torch.no_grad()
+    @torch.no_grad()  # TODO: Move this to PolicyGradients?
     def predict(self, state: torch.Tensor) -> int:
         """Predicts action given a state.
 
@@ -62,10 +62,13 @@ class Model(nn.Module):
         Returns:
             The action represented by an integer.
         """
+        self.eval()
         prediction = self(state)
         action = torch.argmax(prediction, dim=-1).item()
+        self.train()
         return action
 
+    @torch.no_grad()  # TODO: Move this to PolicyGradients?
     def sample_action(self, state: torch.Tensor) -> int:
         """Samples action given a state.
 
@@ -75,10 +78,12 @@ class Model(nn.Module):
         Returns:
             Sampled action represented by an integer.
         """
+        self.eval()
         # Build the probability density function (PDF) for the given state.
         action_prob = self(state)
         # Sample action according to (PDF)
         action = torch.multinomial(action_prob, num_samples=1).item()
+        self.train()
         return action
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
