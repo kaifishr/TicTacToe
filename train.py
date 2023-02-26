@@ -60,7 +60,7 @@ def train_deep_q(env: Environment, model_a: nn.Module, model_b: nn.Module) -> No
     """Train agents with Deep Q-Learning."""
 
     # Trainer
-    num_episodes = 50000
+    num_episodes = 100000
     learning_rate = 0.0005
     gamma = 0.99
 
@@ -73,7 +73,7 @@ def train_deep_q(env: Environment, model_a: nn.Module, model_b: nn.Module) -> No
 
         # Let the agents compete. Rollout one episode.
         if random.random() > 0.5:
-            events_a, events_b = env.episode(model_a, model_b)
+            events_a, events_b = env.episode(model_a, model_b)  # TODO: do env.episode(agent_a, agent_b)
         else:
             events_b, events_a = env.episode(model_b, model_a)
 

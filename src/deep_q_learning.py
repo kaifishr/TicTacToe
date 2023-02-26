@@ -21,7 +21,7 @@ class DeepQLearner:
         # self.epsilon_min = 0.01
         # self.decay_rate = 0.999
         self.gamma = 1.0
-        self.memory_size = 50000  # no replay with memory_size = 1
+        self.memory_size = 10000  # no replay with memory_size = 1
 
         self.memory = deque(maxlen=self.memory_size)
 
