@@ -15,41 +15,41 @@ class DeepQLearner:
         self.size = 3
         self.model = model  # policy
         self.learning_rate = learning_rate
-        self.batch_size = 32
+        self.batch_size = 128
 
-        self.epsilon = 0.9
-        self.epsilon_min = 0.01
-        self.decay_rate = 0.995
-        self.gamma = 0.95
-        self.memory_size = 10000  # no replay with memory_size = 1
+        # self.epsilon = 0.9
+        # self.epsilon_min = 0.01
+        # self.decay_rate = 0.999
+        self.gamma = 1.0
+        self.memory_size = 50000  # no replay with memory_size = 1
 
         self.memory = deque(maxlen=self.memory_size)
 
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=self.learning_rate)
         self.criterion = nn.MSELoss(reduction="mean")
 
-    def select_action(self, state: torch.Tensor) -> int:
-        """Selects an action from a discrete action space.
+    # def select_action(self, state: torch.Tensor) -> int:
+    #     """Selects an action from a discrete action space.
 
-        Action is random with probability `epsilon` (epsilon-greedy value)
-        to encourage exploration. 
+    #     Action is random with probability `epsilon` (epsilon-greedy value)
+    #     to encourage exploration.
 
-        Args:
-            state: State observed by agent.
+    #     Args:
+    #         state: State observed by agent.
 
-        Returns:
-            Action according to current policy or random action.
-        """
-        if random.random() < self.epsilon:
-            # Exploration by choosing random action.
-            action = random.randint(0, self.size**2 - 1)  # m * n - 1
-        else:
-            # Exploitation by selecting action according to policy
-            # with highest predicted utility at current state.
-            action = self.model.get_action(state)
+    #     Returns:
+    #         Action according to current policy or random action.
+    #     """
+    #     if random.random() < self.epsilon:
+    #         # Exploration by choosing random action.
+    #         action = random.randint(0, self.size**2 - 1)  # m * n - 1
+    #     else:
+    #         # Exploitation by selecting action according to policy
+    #         # with highest predicted utility at current state.
+    #         action = self.model.get_action(state)
 
-        return action
-    
+    #     return action
+
     def _memorize(self, events: dict) -> None:
         """Writes current events to memory (replay buffer).
 
@@ -60,10 +60,10 @@ class DeepQLearner:
         for state, action, rewards, new_state, done in zip(*events.values()):
             self.memory.append([state, action, rewards, new_state, done])
 
-    def _epsilon_scheduler(self) -> None:
-        """Decays epsilon-greedy value."""
-        if self.epsilon > self.epsilon_min:
-            self.epsilon *= self.decay_rate
+    # def _epsilon_scheduler(self) -> None:
+    #     """Decays epsilon-greedy value."""
+    #     if self.epsilon > self.epsilon_min:
+    #         self.epsilon *= self.decay_rate
 
     def _create_training_set(self) -> None:
         """Create training set from memory."""
@@ -83,7 +83,7 @@ class DeepQLearner:
             q_targets_new = self.model(new_states)
             self.model.train()
 
-        for i, (_, action, reward, new_state, done) in enumerate(replay_batch):
+        for i, (_, action, reward, _, done) in enumerate(replay_batch):
             if not done:
                 q_targets[i, action] = reward + self.gamma * torch.amax(q_targets_new[i]).item()
             else:
@@ -91,7 +91,7 @@ class DeepQLearner:
 
         return states, q_targets
 
-    @staticmethod 
+    @staticmethod
     def print_events(events: dict) -> None:
         """Prints events in a better format."""
         for key, value in events.items():
@@ -104,8 +104,6 @@ class DeepQLearner:
 
         rewards = events["rewards"]
 
-        self.print_events(events) 
-
         self._memorize(events=events)
 
         states, q_targets = self._create_training_set()
@@ -117,6 +115,6 @@ class DeepQLearner:
         loss.backward()
         self.optimizer.step()
 
-        self._epsilon_scheduler()
+        # self._epsilon_scheduler()
 
         return loss.item(), sum(rewards)

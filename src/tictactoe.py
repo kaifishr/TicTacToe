@@ -209,7 +209,9 @@ class TicTacToe(Environment):
 
         return state, reward, done
 
-    def episode(self, model_a: nn.Module, model_b: nn.Module) -> tuple:  # episode -> play_episode / rollout_episode / run_episode
+    def episode(
+        self, model_a: nn.Module, model_b: nn.Module
+    ) -> tuple:  # episode -> play_episode / rollout_episode / run_episode
         """Agents play one episode of the game.
 
         The episode stops if the game is won, lost or a draw.

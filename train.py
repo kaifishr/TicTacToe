@@ -14,7 +14,7 @@ from src.tictactoe import TicTacToe
 from src.model import Model  # PGNetwork
 from src.model import QNetwork
 from src.policy_gradients import PolicyGradients
-from src.deep_q_learning import DeepQLearner 
+from src.deep_q_learning import DeepQLearner
 from src.utils import save_checkpoint
 from src.utils import set_random_seed
 
@@ -60,7 +60,7 @@ def train_deep_q(env: Environment, model_a: nn.Module, model_b: nn.Module) -> No
     """Train agents with Deep Q-Learning."""
 
     # Trainer
-    num_episodes = 10000
+    num_episodes = 50000
     learning_rate = 0.0005
     gamma = 0.99
 

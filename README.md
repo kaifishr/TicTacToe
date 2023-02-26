@@ -156,10 +156,11 @@ The policy is a neural network that outputs probabilities over `size**2` possibl
 
 ## TODO
 
-- Policy gradients
-- Deep-Q
-- Evolutionary strategies (maybe not)
+- Policy gradients.
+- Deep-Q.
+- Evolutionary strategies (maybe not).
 - Generalize implementation for m,n,k-games.
+- Add config handler.
 
 
 ## License
