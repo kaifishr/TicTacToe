@@ -62,14 +62,14 @@ class Model(nn.Module):
         Returns:
             The action represented by an integer.
         """
-        self.eval()
+        self.eval()  # TODO: Write decorator for eval() train() block
         prediction = self(state)
         action = torch.argmax(prediction, dim=-1).item()
         self.train()
         return action
 
     @torch.no_grad()  # TODO: Move this to PolicyGradients?
-    def sample_action(self, state: torch.Tensor) -> int:
+    def get_action(self, state: torch.Tensor) -> int:
         """Samples action given a state.
 
         Args:
@@ -82,7 +82,61 @@ class Model(nn.Module):
         # Build the probability density function (PDF) for the given state.
         action_prob = self(state)
         # Sample action according to (PDF)
+        # TODO: Add temperature scaling
         action = torch.multinomial(action_prob, num_samples=1).item()
+        self.train()
+        return action
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        x = self.model(x)
+        return x
+
+
+class QNetwork(nn.Module):
+    """Class information.
+    
+    More detailed class information.
+    
+    Attribute:
+        in_features:
+        out_features: 
+
+    TODO: Finish docstring.
+        
+    """
+    def __init__(self, size: int) -> None:
+        """Initializes the Q network."""
+        super().__init__()
+
+        in_features = size**2  # state dimensions.
+        out_features = size**2  # number of actions.
+        hidden_features = 128
+        prob_dropout = 0.0
+
+        self.model = nn.Sequential(
+            nn.Flatten(start_dim=1),
+            nn.Linear(in_features, hidden_features),
+            nn.GELU(),
+            nn.Dropout(p=prob_dropout),
+            nn.Linear(in_features=hidden_features, out_features=hidden_features),
+            nn.GELU(),
+            nn.Dropout(p=prob_dropout),
+            nn.Linear(in_features=hidden_features, out_features=out_features),
+        )
+
+    @torch.no_grad()  # TODO: Move this to DeepQLearner?
+    def get_action(self, state: torch.Tensor) -> int:  # predict -> get_action
+        """Returns action based on given state for current policy.
+
+        Args:
+            state: Flattened playing field of size `size**2`.
+
+        Returns:
+            The action represented by an integer.
+        """
+        self.eval()  # TODO: Write decorator for eval() train() block
+        actions = self(state)
+        action = torch.argmax(actions, dim=-1).item()
         self.train()
         return action
 

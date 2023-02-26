@@ -209,7 +209,7 @@ class TicTacToe(Environment):
 
         return state, reward, done
 
-    def episode(self, model_a: nn.Module, model_b: nn.Module) -> tuple:  # episode -> play_episode / rollout_episode
+    def episode(self, model_a: nn.Module, model_b: nn.Module) -> tuple:  # episode -> play_episode / rollout_episode / run_episode
         """Agents play one episode of the game.
 
         The episode stops if the game is won, lost or a draw.
@@ -231,8 +231,7 @@ class TicTacToe(Environment):
         while not done:
 
             # Agent a
-            # action = model_a.predict(state)
-            action = model_a.sample_action(state)
+            action = model_a.get_action(state)
             new_state, reward, done = self.step(action=action, player=-1)
 
             events_a["states"].append(copy.deepcopy(state))
@@ -249,8 +248,7 @@ class TicTacToe(Environment):
 
             # Agent b
             if not done:
-                # action = model_b.predict(state)
-                action = model_b.sample_action(state)
+                action = model_b.get_action(state)
                 new_state, reward, done = self.step(action=action, player=1)
 
                 events_b["states"].append(copy.deepcopy(state))
