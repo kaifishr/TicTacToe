@@ -156,12 +156,9 @@ The policy is a neural network that outputs probabilities over `size**2` possibl
 
 ## TODO
 
-- Policy gradients.
-- Deep-Q.
-- Evolutionary strategies (maybe not).
+- Add more theory to readme.
 - Generalize implementation for m,n,k-games.
-- Add config handler.
-
+- Implement adaptive epsilon decay rate.
 
 ## License
 

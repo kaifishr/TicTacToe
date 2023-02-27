@@ -55,7 +55,7 @@ def argument_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "-ne", "--num-episodes",
         dest="num_episodes",
-        default=1_000_000,
+        default=400_000,
         type=int
     )
 
@@ -87,7 +87,7 @@ def argument_parser() -> argparse.ArgumentParser:
         "-dr", "--decay-rate",
         dest="decay_rate",
         help="Decay rate for epsilon-greedy value.",
-        default=0.999,
+        default=0.9999,
         type=float
     )
     
@@ -95,7 +95,7 @@ def argument_parser() -> argparse.ArgumentParser:
         "-ms", "--memory-size",
         dest="memory_size",
         help="Replay memory size. Set to 1 for no memory.",
-        default=1_000_000,
+        default=500_000,
         type=int
     )
 
