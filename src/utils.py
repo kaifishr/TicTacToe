@@ -1,4 +1,6 @@
 """Script with helper functions."""
+import warnings
+
 import numpy
 import pathlib
 import random
@@ -19,9 +21,9 @@ def save_checkpoint(model: torch.nn.Module, model_name: str, args) -> None:
     Uses torch.save() to save PyTorch models.
 
     Args:
-        model: A PyTorch model.
-        model_name:
-        args:
+        model: PyTorch model.
+        model_name: Name of policy model.
+        args: Parsed arguments.
     """
     checkpoint_name = f"{f'{model_name}_{args.algorithm}' if model_name else 'model'}"
     checkpoint_path = "weights"
@@ -34,9 +36,9 @@ def load_checkpoint(model: torch.nn.Module, args) -> None:
     """Loads model from checkpoint.
 
     Args:
-        model: Neural network.
-        model_name:
-        args:
+        model: PyTorch model.
+        model_name: Name of policy model.
+        args: Parsed arguments.
     """
     checkpoint_name = f"{f'{args.model_name}_{args.algorithm}' if args.model_name else 'model'}"
     checkpoint_path = "weights"
@@ -47,4 +49,6 @@ def load_checkpoint(model: torch.nn.Module, args) -> None:
         model.load_state_dict(state_dict=state_dict)
         print("Model loaded.")
     else:
-        print(f"Model checkpoint '{checkpoint_name}' not found. " "Continuing with random weights.")
+        warnings.warn(
+            f"Model checkpoint '{checkpoint_name}' not found. " "Continuing with random weights."
+        )
