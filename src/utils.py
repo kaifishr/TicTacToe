@@ -47,8 +47,20 @@ def load_checkpoint(model: torch.nn.Module, args) -> None:
     if model_path.is_file():
         state_dict = torch.load(f=model_path)
         model.load_state_dict(state_dict=state_dict)
-        print("Model loaded.")
+        print(f"\nModel '{checkpoint_name}' loaded.\n")
     else:
         warnings.warn(
-            f"Model checkpoint '{checkpoint_name}' not found. " "Continuing with random weights."
+            f"\nModel checkpoint '{checkpoint_name}' not found. " "Continuing with random weights.\n"
         )
+
+
+def print_args(args) -> None:
+    """Prints parsed arguments to console.
+    
+    Args:
+        args: Parsed arguments.
+    """
+    print("\n")
+    representation = "{k:.<32}{v}"
+    for key, value in vars(args).items():
+        print(representation.format(k=key, v=value))

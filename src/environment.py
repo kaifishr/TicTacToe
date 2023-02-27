@@ -275,7 +275,7 @@ class TicTacToe(Environment):
     def play(self, model: nn.Module) -> None:
         """Plays game against an agent."""
 
-        print("Game started.\n")
+        print("\nGame started.\n")
 
         done = False
         state = self.reset()
@@ -330,8 +330,6 @@ class TicTacToe(Environment):
 
     def __repr__(self) -> str:
         """Prints playing field."""
-        # prototype = "{:^3}" * self.size
-        # return "\n" + "\n".join(prototype.format(*row) for row in self.field.tolist()) + "\n"
         prototype = "{:3}" * self.size
         representation = "\n".join(prototype.format(*row) for row in self.field.tolist())
         representation = representation.replace("-1", " x").replace("1", "o").replace("0", ".")

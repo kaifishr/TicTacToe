@@ -8,6 +8,7 @@ import random
 
 from torch.utils.tensorboard import SummaryWriter
 
+from src.utils import print_args
 from src.utils import save_checkpoint
 from src.utils import set_random_seed
 from src.argparser import argument_parser
@@ -51,6 +52,7 @@ def run_agents(env: Environment, agent_a: Agent, agent_b: Agent, args) -> None:
 if __name__ == "__main__":
 
     args = argument_parser()
+    print_args(args=args)
     
     env = TicTacToe(size=args.field_size)
 

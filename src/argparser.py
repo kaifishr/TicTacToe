@@ -54,7 +54,7 @@ def argument_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "-ne", "--num-episodes",
         dest="num_episodes",
-        default=100000,
+        default=1_000_000,
         type=int
     )
 
@@ -94,7 +94,7 @@ def argument_parser() -> argparse.ArgumentParser:
         "-ms", "--memory-size",
         dest="memory_size",
         help="Replay memory size. Set to 1 for no memory.",
-        default=1000000,
+        default=1_000_000,
         type=int
     )
 
@@ -123,10 +123,11 @@ def argument_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "-dp", "--dropout-probability",
         dest="dropout_probability",
-        default=0.0,
+        default=0.1,
         type=float
     )
 
+    # TODO: Add variable number of layers.
     parser.add_argument(
         "-l", "--layers",
         dest="num_layers",
@@ -137,7 +138,7 @@ def argument_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "-hu", "--hidden-units",
         dest="num_hidden_units",
-        default=32,
+        default=128,
         type=int
     )
 
