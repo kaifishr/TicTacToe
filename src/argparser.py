@@ -12,6 +12,7 @@ def argument_parser() -> argparse.ArgumentParser:
         description="Trains agent to play Tic-tac-toe with reinforcement learning."
     )
 
+    # TODO: Add to model name
     parser.add_argument(
         "-t", "--tag",
         dest="tag",
@@ -146,7 +147,7 @@ def argument_parser() -> argparse.ArgumentParser:
         "-mn", "--model-name",
         dest="model_name",
         help="Defines which model to load.",
-        default="agent_a",
+        default="",
         type=str
     )
 

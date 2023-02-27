@@ -52,7 +52,7 @@ class PolicyGradient(Agent):
         self.model.train()
         return action
 
-    def step(self, events: dict) -> float:
+    def step(self, events: dict) -> None:
         """Runs single optimization step. Updates the network."""
 
         states = events["states"]
@@ -91,4 +91,5 @@ class PolicyGradient(Agent):
         loss.backward()
         self.optimizer.step()
 
-        return loss.item(), sum(rewards)
+        self.stats["loss"] = loss
+        self.stats["reward"] = sum(rewards)

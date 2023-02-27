@@ -34,14 +34,21 @@ def run_agents(env: Environment, agent_a: Agent, agent_b: Agent, args) -> None:
             events_b, events_a = env.run_episode(agent_b, agent_a)
 
         # Update network.
-        loss_a, reward_a = agent_a.step(events_a)
-        loss_b, reward_b = agent_b.step(events_b)
+        agent_a.step(events_a)
+        agent_b.step(events_b)
 
         if episode % 500 == 0:
-            writer.add_scalar("loss/a", loss_a, episode)
-            writer.add_scalar("loss/b", loss_b, episode)
-            writer.add_scalar("reward/a", reward_a, episode)
-            writer.add_scalar("reward/b", reward_b, episode)
+            # writer.add_scalars("stats/agent_a", agent_a.stats, episode)
+            # writer.add_scalars("stats/agent_b", agent_b.stats, episode)
+            for key, value in agent_a.stats.items():
+                writer.add_scalar(f"agent_a/{key}", value, episode)
+            for key, value in agent_b.stats.items():
+                writer.add_scalar(f"agent_b/{key}", value, episode)
+            
+            # writer.add_scalar("loss/a", loss_a, episode)
+            # writer.add_scalar("loss/b", loss_b, episode)
+            # writer.add_scalar("reward/a", reward_a, episode)
+            # writer.add_scalar("reward/b", reward_b, episode)
 
     writer.close()
 

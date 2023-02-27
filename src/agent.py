@@ -18,6 +18,12 @@ class Agent:
         """Initializes abstract learner class."""
         self.model = model
 
+        self.stats = {
+            "epsilon": None,
+            "loss": None,
+            "reward": None
+        }
+
     @torch.no_grad()
     def predict(self, state: torch.Tensor) -> int:  # predict -> get_action
         """Predicts action given a state.

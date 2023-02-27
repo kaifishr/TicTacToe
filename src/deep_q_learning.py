@@ -124,17 +124,18 @@ class DeepQLearning(Agent):
 
         return loss.item()
 
-    def step(self, events: dict) -> float:
+    def step(self, events: dict) -> None:
         """Runs single optimization step. Updates the network.
         
         Args:
             events: Tuple holding events.
         """
-        rewards = events["rewards"]  # TODO: Not happy with this
 
         self._memorize(events=events)
         states, q_targets = self._create_training_set()
         loss = self.train_on_batch(states=states, q_targets=q_targets)
         self._epsilon_scheduler()
 
-        return loss, sum(rewards)
+        self.stats["loss"] = loss
+        self.stats["reward"] = sum(events["rewards"])
+        self.stats["epsilon"] = self.epsilon
