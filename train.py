@@ -11,8 +11,8 @@ from torch.utils.tensorboard import SummaryWriter
 from src.utils import save_checkpoint
 from src.utils import set_random_seed
 from src.argparser import argument_parser
-from environment import Environment
-from environment import TicTacToe
+from src.environment import Environment
+from src.environment import TicTacToe
 from src.model import Model
 from src.agent import Agent
 from src.policy_gradient import PolicyGradient
