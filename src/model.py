@@ -71,25 +71,6 @@ class Model(nn.Module):
         self.train()
         return action
 
-    # @torch.no_grad()  # TODO: Move this to PolicyGradients?
-    # def get_action(self, state: torch.Tensor) -> int:
-    #     """Samples action given a state.
-
-    #     Args:
-    #         state: Flattended playfield of size `size**2`.
-
-    #     Returns:
-    #         Sampled action represented by an integer.
-    #     """
-    #     self.eval()
-    #     # Build the probability density function (PDF) for the given state.
-    #     action_prob = self(state)
-    #     # Sample action according to (PDF)
-    #     # TODO: Add temperature scaling
-    #     action = torch.multinomial(action_prob, num_samples=1).item()
-    #     self.train()
-    #     return action
-
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = self.model(x)
         return x
@@ -118,9 +99,9 @@ class QNetwork(nn.Module):
         hidden_features = 128
         prob_dropout = 0.0
 
-        self.epsilon = 0.9
-        self.epsilon_min = 0.01
-        self.decay_rate = 0.999
+        # self.epsilon = 0.9
+        # self.epsilon_min = 0.01
+        # self.decay_rate = 0.999
 
         self.model = nn.Sequential(
             nn.Flatten(start_dim=1),
@@ -149,10 +130,10 @@ class QNetwork(nn.Module):
     #     self.train()
     #     return action
 
-    def _epsilon_scheduler(self) -> None:
-        """Decays epsilon-greedy value."""
-        if self.epsilon > self.epsilon_min:
-            self.epsilon *= self.decay_rate
+    # def _epsilon_scheduler(self) -> None:
+    #     """Decays epsilon-greedy value."""
+    #     if self.epsilon > self.epsilon_min:
+    #         self.epsilon *= self.decay_rate
 
     @torch.no_grad()  # TODO: Move this to DeepQLearner?
     def predict(self, state: torch.Tensor) -> int:  # predict -> get_action
@@ -170,30 +151,30 @@ class QNetwork(nn.Module):
         self.train()
         return action
 
-    @torch.no_grad()  # TODO: Move this to DeepQLearner?
-    def get_action(self, state: torch.Tensor) -> int:
-        """Selects an action from a discrete action space.
+    # @torch.no_grad()  # TODO: Move this to DeepQLearner?
+    # def get_action(self, state: torch.Tensor) -> int:
+    #     """Selects an action from a discrete action space.
 
-        Action is random with probability `epsilon` (epsilon-greedy value)
-        to encourage exploration.
+    #     Action is random with probability `epsilon` (epsilon-greedy value)
+    #     to encourage exploration.
 
-        Args:
-            state: State observed by agent.
+    #     Args:
+    #         state: State observed by agent.
 
-        Returns:
-            Action according to current policy or random action.
-        """
-        if random.random() < self.epsilon:
-            # Exploration by choosing random action.
-            action = random.randint(0, self.size**2 - 1)  # m * n - 1
-        else:
-            # Exploitation by selecting action according to policy
-            # with highest predicted utility at current state.
-            action = self.predict(state)
+    #     Returns:
+    #         Action according to current policy or random action.
+    #     """
+    #     if random.random() < self.epsilon:
+    #         # Exploration by choosing random action.
+    #         action = random.randint(0, self.size**2 - 1)  # m * n - 1
+    #     else:
+    #         # Exploitation by selecting action according to policy
+    #         # with highest predicted utility at current state.
+    #         action = self.predict(state)
 
-        self._epsilon_scheduler()
+    #     self._epsilon_scheduler()
 
-        return action
+    #     return action
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = self.model(x)

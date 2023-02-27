@@ -7,19 +7,13 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-
-class Learner:
-    """Abstract learner class."""
-
-    def __init__(self):
-        """Initializes abstract learner class."""
+from src.agent import Agent
 
 
-class PolicyGradients(Learner):
+class PolicyGradient(Agent):
     """Policy gradient agent.
     
     Attributes:
-        model:
         size:
         learning_rate:
         gamma:
@@ -30,9 +24,7 @@ class PolicyGradients(Learner):
 
     def __init__(self, model: nn.Module, args) -> None:
         """Initializes class."""
-        super().__init__()
-
-        self.model = model  # policy
+        super().__init__(model=model)
 
         self.size = args.field_size
         self.learning_rate = args.learning_rate
@@ -80,6 +72,7 @@ class PolicyGradients(Learner):
 
         discounted_rewards = torch.tensor(discounted_rewards)
 
+        # TODO: Move this to base class
         # if len(discounted_rewards) > 1:
         #     std = torch.std(discounted_rewards)
         #     if std != 0:

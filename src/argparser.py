@@ -19,11 +19,14 @@ def argument_parser() -> argparse.ArgumentParser:
         type=int
     )
 
-    # Agent
+    #########
+    # Agent #
+    #########
 
     parser.add_argument(
-        "-m", "--method",
-        dest="method",
+        "-a", "--algorithm",
+        dest="algorithm",
+        help="Reinforcement learning algorithm.",
         default="policy_gradient",
         choices=["policy_gradient", "deep_q_learning"],
         type=str,
@@ -41,7 +44,7 @@ def argument_parser() -> argparse.ArgumentParser:
     )
 
     parser.add_argument(
-        "-n", "--num-episodes",
+        "-ne", "--num-episodes",
         dest="num_episodes",
         default=100000,
         type=int
@@ -55,7 +58,48 @@ def argument_parser() -> argparse.ArgumentParser:
         type=float
     )
 
-    # Environment
+    parser.add_argument(
+        "-e", "--epsilon",
+        dest="epsilon",
+        help="Epsilon-greedy value (exploration rate).",
+        default=1.0,
+        type=float
+    )
+
+    parser.add_argument(
+        "-em", "--epsilon-min",
+        dest="epsilon_min",
+        help="Minimum epsilon-greedy value.",
+        default=0.01,
+        type=float
+    )
+
+    parser.add_argument(
+        "-dr", "--decay-rate",
+        dest="decay_rate",
+        help="Decay rate for epsilon-greedy value.",
+        default=0.999,
+        type=float
+    )
+    
+    parser.add_argument(
+        "-ms", "--memory-size",
+        dest="memory_size",
+        help="Replay memory size. Set to 1 for no memory.",
+        default=1000000,
+        type=int
+    )
+
+    parser.add_argument(
+        "-bs", "--batch_size",
+        dest="batch_size",
+        default=128,
+        type=int
+    )
+
+    ###############
+    # Environment #
+    ###############
 
     parser.add_argument(
         "-fs", "--field-size",
@@ -64,10 +108,12 @@ def argument_parser() -> argparse.ArgumentParser:
         type=int
     )
 
-    # Model parameters
+    #############################
+    # Model / policy parameters #
+    #############################
 
     parser.add_argument(
-        "-p", "--dropout-probability",
+        "-dp", "--dropout-probability",
         dest="dropout_probability",
         default=0.0,
         type=float
@@ -81,7 +127,7 @@ def argument_parser() -> argparse.ArgumentParser:
     )
 
     parser.add_argument(
-        "-u", "--hidden-units",
+        "-hu", "--hidden-units",
         dest="num_hidden_units",
         default=32,
         type=int

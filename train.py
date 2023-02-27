@@ -13,28 +13,22 @@ from src.argparser import argument_parser
 from src.tictactoe import Environment
 from src.tictactoe import TicTacToe
 from src.model import Model  # PGNetwork
-from src.model import QNetwork
-from src.policy_gradients import PolicyGradients
-from src.deep_q_learning import DeepQLearner
+from src.policy_gradient import PolicyGradient
+from src.deep_q_learning import DeepQLearning
+from src.agent import Agent
 from src.utils import save_checkpoint
 from src.utils import set_random_seed
 
 
-def train_policy_gradients(env: Environment, model_a: nn.Module, model_b: nn.Module, args) -> None:
+def run_agents(env: Environment, agent_a: Agent, model_b: Agent, args) -> None:
     """Train agents with Policy Gradients."""
-
-    # Trainer
-    num_episodes = args.num_episodes 
-
-    agent_a = PolicyGradients(model=model_a, args=args)
-    agent_b = PolicyGradients(model=model_b, args=args)
 
     writer = SummaryWriter()
 
-    for episode in range(num_episodes):
+    for episode in range(args.num_episodes):
 
         # Run episode and let the agents compete.
-        if random.random() > 0.5:
+        if random.random() < 0.5:
             events_a, events_b = env.run_episode(agent_a, agent_b)
         else:
             events_b, events_a = env.run_episode(agent_b, agent_a)
@@ -55,26 +49,24 @@ def train_policy_gradients(env: Environment, model_a: nn.Module, model_b: nn.Mod
     save_checkpoint(model=agent_b.model, model_name="agent_b")
 
 
-def train_deep_q(env: Environment, model_a: nn.Module, model_b: nn.Module, args) -> None:
+def run_deep_q_agents(env: Environment, model_a: nn.Module, model_b: nn.Module, args) -> None:
     """Train agents with Deep Q-Learning."""
 
     # Trainer
-    num_episodes = 200000
-    learning_rate = 0.0001
-    gamma = 0.99
+    num_episodes = args.num_episodes
 
-    agent_a = DeepQLearner(model=model_a, learning_rate=learning_rate, gamma=gamma)
-    agent_b = DeepQLearner(model=model_b, learning_rate=learning_rate, gamma=gamma)
+    agent_a = DeepQLearning(model=model_a, args=args)
+    agent_b = DeepQLearning(model=model_b, args=args)
 
     writer = SummaryWriter()
 
     for episode in range(num_episodes):
 
-        # Let the agents compete. Rollout one episode.
-        if random.random() > 0.5:
-            events_a, events_b = env.episode(model_a, model_b)  # TODO: do env.episode(agent_a, agent_b)
+        # Run episode and let the agents compete.
+        if random.random() < 0.5:
+            events_a, events_b = env.run_episode(agent_a, agent_b)
         else:
-            events_b, events_a = env.episode(model_b, model_a)
+            events_b, events_a = env.run_episode(agent_b, agent_a)
 
         # Update network.
         loss_a, reward_a = agent_a.step(events_a)
@@ -100,16 +92,18 @@ if __name__ == "__main__":
 
     # Playing field size
     size = args.field_size
-
     env = TicTacToe(size=args.field_size)
 
+    args.method = "policy_gradient"
     model_a = Model(args)
     model_b = Model(args)
-    train_policy_gradients(env=env, model_a=model_a, model_b=model_b, args=args)
-    exit()
+    agent_a = PolicyGradient(model=model_a, args=args)
+    agent_b = PolicyGradient(model=model_b, args=args)
+    run_agents(env=env, agent_a=agent_a, agent_b=agent_b, args=args)
 
+    args.method = "deep_q_learning"
     model_a = Model(args)
     model_b = Model(args)
-    # model_a = QNetwork(size=size)
-    # model_b = QNetwork(size=size)
-    train_deep_q(env=env, model_a=model_a, model_b=model_b, args=args)
+    agent_a = DeepQLearning(model=model_a, args=args)
+    agent_b = DeepQLearning(model=model_b, args=args)
+    run_agents(env=env, agent_a=agent_a, agent_b=agent_b, args=args)

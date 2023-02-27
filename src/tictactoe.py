@@ -15,7 +15,7 @@ import copy
 import torch
 import torch.nn as nn
 
-from src.policy_gradients import Learner
+from src.agent import Agent
 
 
 class Environment:
@@ -216,7 +216,7 @@ class TicTacToe(Environment):
 
         return state, reward, done
 
-    def run_episode(self, agent_a: Learner, agent_b: Learner) -> tuple:  
+    def run_episode(self, agent_a: Agent, agent_b: Agent) -> tuple:  
         """Let agents play one episode of the game.
 
         The episode stops if the game is won, lost or a draw.
