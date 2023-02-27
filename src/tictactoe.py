@@ -11,8 +11,11 @@ Typical usage:
 
 """
 import copy
+
 import torch
 import torch.nn as nn
+
+from src.policy_gradients import Learner
 
 
 class Environment:
@@ -67,10 +70,14 @@ class TicTacToe(Environment):
     1. The game was lost / won.
     2. Game ends in a draw.
     3. A wrong move was made (forces the agent to learn the game's rules).
+
+    Attributes:
+        size: Size of playing field.
+        field: PyTorch tensor representing playing field.
     """
 
-    def __init__(self, size: int = 3) -> None:
-        """Initializes a square TicTacToe field."""
+    def __init__(self, size: int) -> None:
+        """Initializes a square Tic-tac-toe field."""
         super().__init__()
         self.size = size
         self.field = torch.zeros(size=(size, size), dtype=torch.long)
@@ -209,16 +216,14 @@ class TicTacToe(Environment):
 
         return state, reward, done
 
-    def episode(
-        self, model_a: nn.Module, model_b: nn.Module
-    ) -> tuple:  # episode -> play_episode / rollout_episode / run_episode
-        """Agents play one episode of the game.
+    def run_episode(self, agent_a: Learner, agent_b: Learner) -> tuple:  
+        """Let agents play one episode of the game.
 
         The episode stops if the game is won, lost or a draw.
 
         Args:
-            model_a: The model representing the agent a's policy.
-            model_b: The model representing the agent b's policy.
+            agent_a: Agent holding policy network and reinforcement algorithm.
+            agent_b: Agent holding policy network and reinforcement algorithm.
 
         Returns:
             Tuple for each agent holding states, actions, rewards,
@@ -233,7 +238,7 @@ class TicTacToe(Environment):
         while not done:
 
             # Agent a
-            action = model_a.get_action(state)
+            action = agent_a.get_action(state)
             new_state, reward, done = self.step(action=action, player=-1)
 
             events_a["states"].append(copy.deepcopy(state))
@@ -250,7 +255,7 @@ class TicTacToe(Environment):
 
             # Agent b
             if not done:
-                action = model_b.get_action(state)
+                action = agent_b.get_action(state)
                 new_state, reward, done = self.step(action=action, player=1)
 
                 events_b["states"].append(copy.deepcopy(state))

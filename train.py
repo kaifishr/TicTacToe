@@ -9,6 +9,7 @@ import random
 import torch.nn as nn
 from torch.utils.tensorboard import SummaryWriter
 
+from src.argparser import argument_parser
 from src.tictactoe import Environment
 from src.tictactoe import TicTacToe
 from src.model import Model  # PGNetwork
@@ -19,26 +20,24 @@ from src.utils import save_checkpoint
 from src.utils import set_random_seed
 
 
-def train_policy_gradients(env: Environment, model_a: nn.Module, model_b: nn.Module) -> None:
+def train_policy_gradients(env: Environment, model_a: nn.Module, model_b: nn.Module, args) -> None:
     """Train agents with Policy Gradients."""
 
     # Trainer
-    num_episodes = 200000
-    learning_rate = 0.0005
-    gamma = 1.0
+    num_episodes = args.num_episodes 
 
-    agent_a = PolicyGradients(model=model_a, learning_rate=learning_rate, gamma=gamma)
-    agent_b = PolicyGradients(model=model_b, learning_rate=learning_rate, gamma=gamma)
+    agent_a = PolicyGradients(model=model_a, args=args)
+    agent_b = PolicyGradients(model=model_b, args=args)
 
     writer = SummaryWriter()
 
     for episode in range(num_episodes):
 
-        # Let the agents compete. Rollout one episode.
+        # Run episode and let the agents compete.
         if random.random() > 0.5:
-            events_a, events_b = env.episode(model_a, model_b)
+            events_a, events_b = env.run_episode(agent_a, agent_b)
         else:
-            events_b, events_a = env.episode(model_b, model_a)
+            events_b, events_a = env.run_episode(agent_b, agent_a)
 
         # Update network.
         loss_a, reward_a = agent_a.step(events_a)
@@ -56,12 +55,12 @@ def train_policy_gradients(env: Environment, model_a: nn.Module, model_b: nn.Mod
     save_checkpoint(model=agent_b.model, model_name="agent_b")
 
 
-def train_deep_q(env: Environment, model_a: nn.Module, model_b: nn.Module) -> None:
+def train_deep_q(env: Environment, model_a: nn.Module, model_b: nn.Module, args) -> None:
     """Train agents with Deep Q-Learning."""
 
     # Trainer
-    num_episodes = 100000
-    learning_rate = 0.0005
+    num_episodes = 200000
+    learning_rate = 0.0001
     gamma = 0.99
 
     agent_a = DeepQLearner(model=model_a, learning_rate=learning_rate, gamma=gamma)
@@ -95,17 +94,22 @@ def train_deep_q(env: Environment, model_a: nn.Module, model_b: nn.Module) -> No
 
 if __name__ == "__main__":
 
-    set_random_seed(seed=42)
+    args = argument_parser()
+    
+    set_random_seed(seed=args.random_seed)
 
     # Playing field size
-    size = 3
+    size = args.field_size
 
-    env = TicTacToe(size=size)
+    env = TicTacToe(size=args.field_size)
 
-    # model_a = Model(size=size)
-    # model_b = Model(size=size)
-    # train_policy_gradients(env=env, model_a=model_a, model_b=model_b)
+    model_a = Model(args)
+    model_b = Model(args)
+    train_policy_gradients(env=env, model_a=model_a, model_b=model_b, args=args)
+    exit()
 
-    model_a = QNetwork(size=size)
-    model_b = QNetwork(size=size)
-    train_deep_q(env=env, model_a=model_a, model_b=model_b)
+    model_a = Model(args)
+    model_b = Model(args)
+    # model_a = QNetwork(size=size)
+    # model_b = QNetwork(size=size)
+    train_deep_q(env=env, model_a=model_a, model_b=model_b, args=args)
