@@ -11,8 +11,8 @@ from torch.utils.tensorboard import SummaryWriter
 from src.utils import save_checkpoint
 from src.utils import set_random_seed
 from src.argparser import argument_parser
-from src.tictactoe import Environment
-from src.tictactoe import TicTacToe
+from environment import Environment
+from environment import TicTacToe
 from src.model import Model
 from src.agent import Agent
 from src.policy_gradient import PolicyGradient
@@ -52,7 +52,6 @@ if __name__ == "__main__":
 
     args = argument_parser()
     
-    # Playing field size
     env = TicTacToe(size=args.field_size)
 
     if args.algorithm == "policy_gradient":

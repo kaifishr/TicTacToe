@@ -1,16 +1,16 @@
 """Play against an agent."""
-from src.tictactoe import TicTacToe
-from src.model import Model
 from src.utils import load_checkpoint
+from src.argparser import argument_parser
+from src.model import Model
+from src.environment import TicTacToe
 
 
 if __name__ == "__main__":
 
-    # Playing field size
-    size = 3
+    args = argument_parser()
 
-    model = Model(size=size)
-    load_checkpoint(model=model, model_name="agent_a")
+    model = Model(args=args)
+    load_checkpoint(model=model, args=args)
 
-    env = TicTacToe(size=size)
+    env = TicTacToe(size=args.field_size)
     env.play(model=model)

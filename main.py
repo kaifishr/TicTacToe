@@ -1,5 +1,5 @@
 """Main file to start training or playing."""
-from src.tictactoe import TicTacToe
+from environment import TicTacToe
 
 # from src.play import PlayGame
 # from src.train import Trainer

@@ -141,4 +141,12 @@ def argument_parser() -> argparse.ArgumentParser:
         type=int
     )
 
+    parser.add_argument(
+        "-mn", "--model-name",
+        dest="model_name",
+        help="Defines which model to load.",
+        default="agent_a",
+        type=str
+    )
+
     return parser.parse_args()

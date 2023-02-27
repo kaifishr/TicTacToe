@@ -30,7 +30,7 @@ def save_checkpoint(model: torch.nn.Module, model_name: str, args) -> None:
     torch.save(obj=model.state_dict(), f=model_path)
 
 
-def load_checkpoint(model: torch.nn.Module, model_name: str, args) -> None:
+def load_checkpoint(model: torch.nn.Module, args) -> None:
     """Loads model from checkpoint.
 
     Args:
@@ -38,7 +38,7 @@ def load_checkpoint(model: torch.nn.Module, model_name: str, args) -> None:
         model_name:
         args:
     """
-    checkpoint_name = f"{f'{model_name}_{args.algorithm}' if model_name else 'model'}"
+    checkpoint_name = f"{f'{args.model_name}_{args.algorithm}' if args.model_name else 'model'}"
     checkpoint_path = "weights"
     model_path = pathlib.Path(checkpoint_path) / f"{checkpoint_name}.pth"
 

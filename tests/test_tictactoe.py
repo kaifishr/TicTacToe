@@ -1,9 +1,6 @@
 """Tests for Tic-Tac-Toe game eninge."""
 
-import torch
-import random
-
-from src.tictactoe import TicTacToe
+from environment import TicTacToe
 
 
 def test_game_rules():
