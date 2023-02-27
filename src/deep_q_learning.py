@@ -109,14 +109,6 @@ class DeepQLearning(Agent):
 
         return states, q_targets
 
-    @staticmethod
-    def print_events(events: dict) -> None:
-        """Prints events in a better format."""
-        for key, value in events.items():
-            print(f"{key} = \n")
-            for item in value:
-                print(f"{item}\n")
-
     def train_on_batch(self, states: torch.Tensor, q_targets: torch.Tensor) -> float:
         """Performs single optimization step for batch of training data.
         

@@ -33,3 +33,27 @@ class Agent:
         action = torch.argmax(prediction, dim=-1).item()
         self.model.train()
         return action
+    
+    def normalize_rewards(self, rewards: torch.Tensor) -> torch.Tensor:
+        """Normalizes rewards."""
+
+        # TODO: Move this to base class
+        # if len(discounted_rewards) > 1:
+        #     std = torch.std(discounted_rewards)
+        #     if std != 0:
+        #         mean = torch.mean(discounted_rewards)
+        #         discounted_rewards = (discounted_rewards - mean) / (std + 1e-5)  # the sample weight
+
+    @staticmethod
+    def print_events(events: dict) -> None:
+        """Prints events in a better format.
+        
+        Useful for debugging.
+
+        Args:
+                events: Tuple holding states, actions, rewards, new states, and termination token.
+        """
+        for key, value in events.items():
+            print(f"{key} = \n")
+            for item in value:
+                print(f"{item}\n")

@@ -13,6 +13,14 @@ def argument_parser() -> argparse.ArgumentParser:
     )
 
     parser.add_argument(
+        "-t", "--tag",
+        dest="tag",
+        default="",
+        help="Optional name tag for run.",
+        type=str
+    )
+
+    parser.add_argument(
         "-rs", "--random-seed",
         dest="random_seed",
         default=42,
