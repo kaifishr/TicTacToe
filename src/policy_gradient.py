@@ -37,6 +37,10 @@ class PolicyGradient(Agent):
     def get_action(self, state: torch.Tensor) -> int:
         """Samples action given a state.
 
+        We use the current policy-model to map the environment observation,
+        the state, to a probability distribution of the actions, and sample
+        from this distribution.
+
         Args:
             state: Tensor representing playing field state.
 

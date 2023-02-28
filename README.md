@@ -3,16 +3,16 @@
 $$
 \begin{aligned}
 &\begin{array}{c|c|c}
-\times & \circ & \circ \\
+\circ & \circ & \times \\
 \hline
 \circ & \times &  \circ \\
 \hline
-\circ & \times & \times \\
+\times & \circ & \times \\
 \end{array}
 \end{aligned}
 $$
 
-A minimal environment equipped with reinforcement learning algorithms to train agents to play [Tic-tac-toe](https://en.wikipedia.org/wiki/Tic-tac-toe). Due to its simplicity, this repository is potentially useful for educational purposes and can serve as a starting point to solve other games such as a generalization of m,n,k-games, chess or Go.
+A minimal environment equipped with reinforcement learning algorithms to train agents to compete in [Tic-tac-toe](https://en.wikipedia.org/wiki/Tic-tac-toe). Due to its simplicity, this repository is potentially useful for educational purposes and can serve as a starting point to solve other games such as a generalization of Tic-tac-toe (m,n,k-games), chess or Go.
 
 
 ## Introduction
@@ -24,11 +24,15 @@ In this implementation, two agents alternate taking turns on an $m \times n$ boa
 
 ## Reinforcement Learning
 
-This section is intended to give a very brief introduction to some aspects of reinforcement learning and the algorithms, [Policy Gradients](#policy-gradients) and [Deep Q-Learning](#deep-q-learning), that are used to train the agents to play Tic-tac-toe.
+![](https://www.mathworks.com/help/reinforcement-learning/ug/agent_diagram.png)
+
+This section is intended to give a very brief introduction to some aspects of reinforcement learning and the algorithms, [Policy Gradients](#policy-gradients) and [Deep Q-Learning](#deep-q-learning), that are used to train agents to play Tic-tac-toe.
 
 If the learning task that we try to solve can not be taken offline (because we already are in the possession of labeled training data) and reduced to an abstract task like regression or classification we can formulate it as an reinforcement learning task.
 
-In reinforcement learning, agents interact with an environment, perform actions, and are continually trained to learn how to correctly interact with a dynamic world.
+In reinforcement learning, agents interact with an uncertain environment, perform actions, and are continually trained to learn how to correctly interact with a dynamic world.
+
+The agent consists of the policy network and the reinforcement learning algorithm such as Deep Q-Learning or Policy Gradient.
 
 To be more specific, let's use the game of Tic-tac-toe as an example. The dynamic world or environment is represented by the Tic-tac-toe game.
 
@@ -50,9 +54,9 @@ Based on the observed state, the agent performs an **action**. This action cause
 
 Followed by the action a **reward** is provided by the environment. The reward is a scalar value, where higher values are better.
 
-The agent's action is based on a **policy**. A policy is a function that maps states to actions and can be modeled by a neural network whose parameters $\theta$ are learned.
+The agent's action is based on a **policy**. A policy is a function that maps states (current observation of the environment) to a probability distribution of the actions to be taken and can be modeled by a neural network whose parameters $\bm\theta$ are learned.
 
-$$\text{action}= \text{policy}(\text{state}; \theta)$$
+$$\textbf{action}= \text{policy}(\textbf{state}; \bm{\theta})$$
 
 During the training, the agent interacts with the environment and the selected optimization method, adjusts the agent's policy in order to *maximize the expectation of future rewards*.
 
@@ -95,7 +99,7 @@ States where the game is won come with a reward of +1. Loosing the game or marki
 
 ### Policy Network
 
-[Playing Atari with Deep Reinforcement Learning](https://arxiv.org/abs/1312.5602) showed that deep neural networks are a powerful option to represent reinforcement learning models that map states to (a distribution over) actions.
+[Playing Atari with Deep Reinforcement Learning](https://arxiv.org/abs/1312.5602) showed that the use of deep neural networks are a powerful option to represent reinforcement learning models that map states to (a distribution over) actions.
 
 The policy network receives a state vector $s$ holding nine numbers ($-1$, $0$, or $1$) and uses a softmax output layer to return a probability distribution over the nine possible actions. Using the example from above we can illustrate this as follows: 
 
@@ -112,14 +116,14 @@ $$
 0 & 1 & 0 \\
 -1 & 1 & 1
 \end{pmatrix}
-; \theta
+; \bm\theta
 \end{pmatrix}
 $$
 
 We can choose an action by either choosing the action with the highest probability or by sampling from the output probability distribution.
 
 
-## Episodic Learning
+### Episodic Learning
 
 In a reinforcement learning setting, an agent can theoretically learn a task in an online mode ([see this example](https://arxiv.org/pdf/2208.07860.pdf)), where the agent's policy (the neural network) is continuously updated. However, in practice, this can lead to unpredictable behavior of the agent that is difficult to control.
 
@@ -128,20 +132,24 @@ Instead of updating the agent's policy at every time step, a common approach is 
 During an episode, the agent takes actions according to its current policy and collects the rewards. We then use this information to update the policy's parameters and start a new episode.
 
 
-## Self-play
+### Self-play
 
-This framework allows to train agents using a self-play training strategy. Instead of an algorithmic player as opponent, we train two agents at the same time and let them play against themselves. Alternatively, we can train an agent several episodes until it beats a weaker version of itself for number of times. We then make the trained agent the new opponent and start over again. 
+This framework allows to train agents using a self-play training strategy. Instead of an algorithmic player as opponent, we train two agents at the same time and let them compete against each other. 
 
-TODO To ensure that the agent generalizes well, it is a good strategy to have an ensemble of opponent agents and sample one at random for each episode. 
+Alternatively, we can train an agent several episodes until it beats a weaker version of itself for number of times. We then make the trained agent the new opponent and start over again. 
 
-
-### (TODO) Policy Gradients
-
-The policy is a neural network that outputs probabilities over `size**2` possible actions. Thus, we can interpret the resulting probabilities as a probabilistic policy.
-...
+To ensure that agents generalize well, for the approaches described above it is generally a good idea to work with an ensemble of opponent agents that are sampled at random to compete against each other.
 
 
-### (TODO) Deep Q-Learning
+### Policy Gradients
+
+The agent's interactions with the environment over the period of one episode can be considered as the unrolling of a computational graph. However, parts of this graph are not differentiable such as the sampling of actions or the environment as the environment's underlying computational processes might be unknown. 
+
+
+
+### Deep Q-Learning
+
+TODO
 
 ...
 
@@ -151,14 +159,14 @@ The policy is a neural network that outputs probabilities over `size**2` possibl
 
 * [A Crash Course on Reinforcement Learning](https://arxiv.org/abs/2103.04910)
 
-* [Lecture 13: Reinforcement learning](https://mlvu.github.io/lecture13/)
+* [MLVU, Lecture 13: Reinforcement learning](https://mlvu.github.io/lecture13/)
 
 
 ## TODO
 
-- Add more theory to readme.
 - Generalize implementation for m,n,k-games.
 - Implement adaptive epsilon decay rate for deep q-learning.
+
 
 ## License
 

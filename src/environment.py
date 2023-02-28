@@ -120,7 +120,8 @@ class TicTacToe(Environment):
         """Checks if the game is tied.
 
         Return:
-            Boolean indicating if game is a draw."""
+            Boolean indicating if game is a draw.
+        """
         return torch.all(self.field != 0)
 
     @torch.no_grad()
