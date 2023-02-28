@@ -15,6 +15,41 @@ $$
 A minimal environment equipped with reinforcement learning algorithms to train agents to compete in [Tic-tac-toe](https://en.wikipedia.org/wiki/Tic-tac-toe). Due to its simplicity, this repository is potentially useful for educational purposes and can serve as a starting point to solve other games such as a generalization of Tic-tac-toe (m,n,k-games), chess or Go.
 
 
+## Installation
+
+To run *TicTacToe*, install the latest master directly from GitHub. For a basic install, run:
+
+```console
+git clone https://github.com/kaifishr/TicTacToe
+cd TicTacToe 
+pip3 install -r requirements.txt
+```
+
+## Getting Started
+
+Run a training session using a specified learning algorithm
+
+```console
+cd TicTacToe 
+python train.py -a "policy_gradient"
+python train.py -a "deep_q_learning"
+```
+
+Track important metrics during training with Tensorboard:
+
+```console
+cd TicTacToe 
+tensorboard --logdir runs/
+```
+
+After training, play Tic-tac-toe against an agent:
+
+```console
+cd TicTacToe 
+python play.py -a deep_q_learning -mn agent_a 
+```
+
+
 ## Introduction
 
 Tic-tac-toe is an instance of a perfect information, turn-based two player [**m,n,k-game**]( https://en.wikipedia.org/wiki/M,n,k-game) and is also called a **k-in-a-row** game on an **m-by-n** board. For Tic-tac-toe, these variables are $m=n=k=3$.
