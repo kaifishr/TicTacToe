@@ -46,7 +46,7 @@ def argument_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "-ne", "--num-episodes",
         dest="num_episodes",
-        default=1_000_000,
+        default=100_000,
         type=int
     )
 

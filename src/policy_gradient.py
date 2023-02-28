@@ -29,7 +29,6 @@ class PolicyGradient(Agent):
         self.size = args.field_size
         self.learning_rate = args.learning_rate
         self.gamma = args.gamma
-        self.temperature = args.temperature
 
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=self.learning_rate)
         self.criterion = torch.nn.CrossEntropyLoss(reduction="none")

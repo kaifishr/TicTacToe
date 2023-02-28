@@ -77,7 +77,6 @@ class Model(nn.Module):
         Returns:
             The action represented by an integer.
         """
-        print(f"{state = }")
         prediction = self(state)
         action = torch.argmax(prediction, dim=-1).item()
         return action
