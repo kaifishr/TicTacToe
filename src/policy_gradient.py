@@ -29,6 +29,7 @@ class PolicyGradient(Agent):
         self.size = args.field_size
         self.learning_rate = args.learning_rate
         self.gamma = args.gamma
+        self.temperature = args.temperature
 
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=self.learning_rate)
         self.criterion = torch.nn.CrossEntropyLoss(reduction="none")
@@ -38,16 +39,15 @@ class PolicyGradient(Agent):
         """Samples action given a state.
 
         Args:
-            state: Flattended playfield of size `size**2`.
+            state: Tensor representing playing field state.
 
         Returns:
             Sampled action represented by an integer.
         """
-        self.model.eval() # TODO: Use decorator for eval / train
+        self.model.eval() 
         # Build the probability density function (PDF) for the given state.
         action_prob = self.model(state)
-        # Sample action according to (PDF)
-        # TODO: Add temperature scaling
+        # Sample action from the distribution (PDF).
         action = torch.multinomial(action_prob, num_samples=1).item()
         self.model.train()
         return action
@@ -72,12 +72,7 @@ class PolicyGradient(Agent):
 
         discounted_rewards = torch.tensor(discounted_rewards)
 
-        # TODO: Move this to base class
-        # if len(discounted_rewards) > 1:
-        #     std = torch.std(discounted_rewards)
-        #     if std != 0:
-        #         mean = torch.mean(discounted_rewards)
-        #         discounted_rewards = (discounted_rewards - mean) / (std + 1e-5)  # the sample weight
+        # self.normalize_rewards(rewards=discounted_rewards)
 
         states = torch.vstack(states)
         target_actions = F.one_hot(torch.tensor(actions), num_classes=self.size**2).float()

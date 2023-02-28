@@ -1,10 +1,10 @@
 """Script with helper functions."""
 import warnings
-
-import numpy
+import functools
 import pathlib
 import random
 
+import numpy
 import torch
 
 
@@ -64,3 +64,26 @@ def print_args(args) -> None:
     representation = "{k:.<32}{v}"
     for key, value in vars(args).items():
         print(representation.format(k=key, v=value))
+
+
+def eval(function: callable) -> callable:
+    """Evaluation decorator for class methods.
+    
+    Wraps function that calls a PyTorch module and ensures
+    that inference is performed in evaluation model. Returns
+    back to training mode after inference.
+
+    Args:
+        function: A callable.
+
+    Returns:
+        Decorated function.
+    """
+    @functools.wraps(function)
+    def eval_wrapper(self, *args, **kwargs):
+        self.eval() 
+        out = function(self, *args, **kwargs)
+        self.train()
+        return out
+    
+    return eval_wrapper

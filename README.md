@@ -158,7 +158,7 @@ The policy is a neural network that outputs probabilities over `size**2` possibl
 
 - Add more theory to readme.
 - Generalize implementation for m,n,k-games.
-- Implement adaptive epsilon decay rate.
+- Implement adaptive epsilon decay rate for deep q-learning.
 
 ## License
 

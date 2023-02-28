@@ -282,8 +282,7 @@ class TicTacToe(Environment):
 
         while not done:
 
-            # Machine
-            print("Agent")
+            print("Machine")
             action = model.predict(state)
             state, reward, done = self.step(action=action, player=-1)
 
@@ -302,7 +301,6 @@ class TicTacToe(Environment):
                 else:
                     print("Draw.")
 
-            # Human
             if not done:
                 action = int(input("Enter an index: "))
                 state, reward, done = self.step(action=action, player=1)

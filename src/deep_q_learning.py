@@ -89,7 +89,7 @@ class DeepQLearning(Agent):
         # Use subset of replay memory for training as transitions are strongly correlated.
         replay_batch = random.sample(self.memory, min(len(self.memory), self.batch_size))
 
-        # TODO: Normalize the rewards.
+        # TODO: Normalize the rewards of sampled batch.
 
         # Get states from replay buffer.
         states = torch.vstack([memory[0] for memory in replay_batch])

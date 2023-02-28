@@ -12,15 +12,6 @@ def argument_parser() -> argparse.ArgumentParser:
         description="Trains agent to play Tic-tac-toe with reinforcement learning."
     )
 
-    # TODO: Add to model name
-    parser.add_argument(
-        "-t", "--tag",
-        dest="tag",
-        default="",
-        help="Optional name tag for run.",
-        type=str
-    )
-
     parser.add_argument(
         "-rs", "--random-seed",
         dest="random_seed",
@@ -55,7 +46,7 @@ def argument_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "-ne", "--num-episodes",
         dest="num_episodes",
-        default=400_000,
+        default=1_000_000,
         type=int
     )
 
@@ -128,11 +119,10 @@ def argument_parser() -> argparse.ArgumentParser:
         type=float
     )
 
-    # TODO: Add variable number of layers.
     parser.add_argument(
         "-l", "--layers",
         dest="num_layers",
-        default=2,
+        default=1,
         type=int
     )
 
@@ -147,7 +137,7 @@ def argument_parser() -> argparse.ArgumentParser:
         "-mn", "--model-name",
         dest="model_name",
         help="Defines which model to load.",
-        default="",
+        default=None,
         type=str
     )
 

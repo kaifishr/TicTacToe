@@ -24,31 +24,25 @@ class Agent:
             "reward": None
         }
 
-    @torch.no_grad()
-    def predict(self, state: torch.Tensor) -> int:  # predict -> get_action
-        """Predicts action given a state.
+    def normalize_rewards(self, rewards: torch.Tensor, eps: float = 1e-05) -> torch.Tensor:
+        """Normalizes rewards.
 
+        Normalizes rewards if there is more than one reward 
+        and if standard-deviation is non-zeros.
+        
         Args:
-            state: Flattended playfield of size `size**2`.
-
+            rewards: The agent's rewards.
+            eps: Value added to the denominator for numerical stability.
+            
         Returns:
-            The action represented by an integer.
+            Normalized rewards.
         """
-        self.model.eval()  # TODO: Write decorator for eval() train() block
-        prediction = self.model(state)
-        action = torch.argmax(prediction, dim=-1).item()
-        self.model.train()
-        return action
-    
-    def normalize_rewards(self, rewards: torch.Tensor) -> torch.Tensor:
-        """Normalizes rewards."""
-
-        # TODO: Move this to base class
-        # if len(discounted_rewards) > 1:
-        #     std = torch.std(discounted_rewards)
-        #     if std != 0:
-        #         mean = torch.mean(discounted_rewards)
-        #         discounted_rewards = (discounted_rewards - mean) / (std + 1e-5)  # the sample weight
+        if len(rewards) > 1:
+            std = torch.std(rewards)
+            if std != 0:
+                mean = torch.mean(rewards)
+                rewards = (rewards - mean) / (std + 1e-5)
+        return rewards
 
     @staticmethod
     def print_events(events: dict) -> None:
