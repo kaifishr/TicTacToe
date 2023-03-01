@@ -89,9 +89,9 @@ Based on the observed state, the agent performs an **action**. This action cause
 
 Followed by the action a **reward** is provided by the environment. The reward is a scalar value, where higher values are better.
 
-The agent's action is based on a **policy**. A policy is a function that maps states (current observation of the environment) to a probability distribution of the actions to be taken and can be modeled by a neural network whose parameters $\bm\theta$ are learned.
+The agent's action is based on a **policy**. A policy is a function that maps states (current observation of the environment) to a probability distribution of the actions to be taken and can be modeled by a neural network whose parameters $\boldsymbol \theta$ are learned.
 
-$$\textbf{action}= \text{policy}(\textbf{state}; \bm{\theta})$$
+$$\textbf{action}= \text{policy}(\textbf{state}; \boldsymbol \theta)$$
 
 During the training, the agent interacts with the environment and the selected optimization method, adjusts the agent's policy in order to *maximize the expectation of future rewards*.
 
