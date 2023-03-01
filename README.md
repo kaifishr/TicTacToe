@@ -180,7 +180,19 @@ To ensure that agents generalize well, for the approaches described above it is 
 
 The agent's interactions with the environment over the period of one episode can be considered as the unrolling of a computational graph. However, parts of this graph are not differentiable such as the sampling of actions or the environment as the environment's underlying computational processes might be unknown.
 
-The Policy Gradient reinforcement learning algorithm ignores the problem of credit assignment as it focuses on the overall performance of the agent's policy after the unrolling of one episode.
+The Policy Gradient reinforcement learning algorithm ignores the problem of credit assignment as it focuses on the overall performance of the agent's policy after running one episode. 
+
+If an episode ends with a positive (negative) total reward, it is expected that, on average, actions associated with positive (negative) reward occurred more often during the episode. 
+
+In practice, we unroll an episode and compute the discounted rewards to derive the error signal, for each step taken during the episode, that is then used for the policy gradient descent.
+
+Let's look at the math behind policy gradients. Let $a$ be a single action that was taken during an episode rollout and $r$ the final reward of that episode.
+
+As the policy network (resembles a probability density function / produces probabilities) from which we sample actions, the final reward $r$ can be considered a random variable (whose realization is a probabilistic value). Hence, for identical initial states, the decision process and therefore the final reward might look totally different.
+
+The expected total reward $\mathbb{E}[r(a)]$ is therefore what we want to maximize.
+
+
 
 
 ### Deep Q-Learning
