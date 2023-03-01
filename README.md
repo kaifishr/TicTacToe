@@ -228,8 +228,17 @@ It should be noted that the gradient estimates are unbiased but high in variance
 
 TODO
 
-...
+- Learn a policy that maximizes the discounted reward for all states.
+- Here, we consider a deterministic policy
+- Since the policy is deterministic, we perform always the same action for a given state. 
+- If the policy is deterministic, we also know all future states and rewards.
+- Discounting the reward ensures that the total reward does not diverge in certain problems that can potentially go on forever (cart pole).
 
+$$
+r = r(s_0, a_0) + \gamma r(s_1, a_1) + \gamma^2 r(s_2, a_2) + \cdots
+$$
+
+where $\gamma$ lives in the range $(0, 1)$ and is usually close to 1.
 
 
 ## References
