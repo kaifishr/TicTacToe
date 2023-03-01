@@ -190,10 +190,39 @@ Let's look at the math behind policy gradients. Let $a$ be a single action that 
 
 As the policy network (resembles a probability density function / produces probabilities) from which we sample actions, the final reward $r$ can be considered a random variable (whose realization is a probabilistic value). Hence, for identical initial states, the decision process and therefore the final reward might look totally different.
 
-The expected total reward $\mathbb{E}[r(a)]$ is therefore what we want to maximize.
+The expected total reward $\mathbb{E}[r(a)]$ is therefore what we want to maximize. In the discrete case, the expected value of the reward is defined as
 
+$$
+\mathbb{E}[r(a)] = \sum_{a} p(a) r(a)
+$$
 
+where $p(a)$ is the probability of the policy network for action $a$. As we want to maximize the total reward, we take the derivative of the expected reward with respect to the policy network's parameters to derive the main equation in Policy Gradient:
 
+$$
+\begin{aligned}
+\nabla_{\theta} \mathbb{E}[r(a)] 
+&= \nabla_{\theta} \sum_{a} p(a | \theta) r(a)\\
+&= \sum_{a} \nabla_{\theta} p(a | \theta) r(a)\\
+&= \sum_{a} p(a | \theta) \nabla_{\theta} \log (p(a | \theta)) r(a)\\
+&= \mathbb{E} [\nabla_{\theta} \log (p(a | \theta)) r(a)]
+\end{aligned}
+$$
+
+where we compute the expression $\nabla_{\theta} \log (p(a | \theta))$ using backpropagation.
+
+As an aside, the above derivation uses the log-derivative trick. The derivative of function $y = \log (f(x))$ is $\frac{\partial}{\partial x} y = \frac{1}{f(x)} \frac{\partial}{\partial x} f(x)$. Therefore we can write $f(x) \frac{\partial} {\partial x} \log (f(x)) = \frac{\partial} {\partial x} f(x)$. Applying this to the derivative of the probability for action $a$ we get $\nabla_{\theta} p(a | \theta) = \sum_{a} p(a | \theta) \nabla_{\theta} \log (p(a | \theta))$. Aside end.
+
+The derived expectation can be approximated by averaging $T$ samples by dropping the expectation operator altogether.
+
+$$
+\begin{aligned}
+\nabla_{\theta} \mathbb{E}[r(a)] 
+&= \mathbb{E} [\nabla_{\theta} \log (p(a | \theta)) r(a)]\\
+&= \frac{1}{T} \sum_{t} \nabla_{\theta} \log (p(a_{t} | \theta)) r(a_{t})]
+\end{aligned}
+$$
+
+It should be noted that the gradient estimates are unbiased but high in variance. To reduce the variance, other methods such as [control variates](https://en.wikipedia.org/wiki/Control_variates) or [actor critic](http://rail.eecs.berkeley.edu/deeprlcourse-fa17/f17docs/lecture_5_actor_critic_pdf).
 
 ### Deep Q-Learning
 
@@ -214,6 +243,7 @@ TODO
 
 - Generalize implementation for m,n,k-games.
 - Implement adaptive epsilon decay rate for deep q-learning.
+- Add Boltzmann exploration and epsilon-greedy sampling.
 
 
 ## License

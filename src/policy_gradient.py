@@ -84,7 +84,7 @@ class PolicyGradient(Agent):
         self.optimizer.zero_grad()
         output_actions = self.model(states)
         loss = self.criterion(output_actions, target_actions)
-        loss = loss * discounted_rewards
+        loss = discounted_rewards * loss
         loss = loss.mean()
         loss.backward()
         self.optimizer.step()
