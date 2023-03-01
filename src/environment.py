@@ -168,7 +168,7 @@ class TicTacToe(Environment):
         else:  # player == -1
             self.field[x, y] = -1.0
 
-    def index_to_coordinate(self, index: int) -> tuple[int, int]:
+    def _index_to_coordinate(self, index: int) -> tuple[int, int]:
         """Converts a flat index into a coordinate tuple.
 
         Args:
@@ -177,8 +177,7 @@ class TicTacToe(Environment):
         Returns:
             Tuple with coordinates.
         """
-        x = index // self.size
-        y = index % self.size
+        x, y = divmod(index, self.size)  # index // self.size, index % self.size
         return x, y
 
     def step(self, action: int, player: int) -> tuple:
@@ -194,7 +193,7 @@ class TicTacToe(Environment):
             if game is finished.
 
         """
-        x, y = self.index_to_coordinate(action)
+        x, y = self._index_to_coordinate(action)
 
         if self.is_free(x=x, y=y):
             self.mark_field(x=x, y=y, player=player)

@@ -1,6 +1,6 @@
 """Tests for Tic-Tac-Toe game eninge."""
 
-from environment import TicTacToe
+from src.environment import TicTacToe
 
 
 def test_game_rules():
