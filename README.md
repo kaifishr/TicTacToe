@@ -176,10 +176,11 @@ Alternatively, we can train an agent several episodes until it beats a weaker ve
 To ensure that agents generalize well, for the approaches described above it is generally a good idea to work with an ensemble of opponent agents that are sampled at random to compete against each other.
 
 
-### Policy Gradients
+### Policy Gradient
 
-The agent's interactions with the environment over the period of one episode can be considered as the unrolling of a computational graph. However, parts of this graph are not differentiable such as the sampling of actions or the environment as the environment's underlying computational processes might be unknown. 
+The agent's interactions with the environment over the period of one episode can be considered as the unrolling of a computational graph. However, parts of this graph are not differentiable such as the sampling of actions or the environment as the environment's underlying computational processes might be unknown.
 
+The Policy Gradient reinforcement learning algorithm ignores the problem of credit assignment as it focuses on the overall performance of the agent's policy after the unrolling of one episode.
 
 
 ### Deep Q-Learning
