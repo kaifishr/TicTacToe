@@ -151,7 +151,7 @@ $$
 0 & 1 & 0 \\
 -1 & 1 & 1
 \end{pmatrix}
-; \bm{\theta} 
+; \mathbf{\theta} 
 \end{pmatrix}
 $$
 
