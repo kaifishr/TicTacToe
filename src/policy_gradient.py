@@ -35,7 +35,7 @@ class PolicyGradient(Agent):
 
     @torch.no_grad()
     def get_action(self, state: torch.Tensor) -> int:
-        """Samples action given a state.
+        """Samples an action from a discrete action space given a state.
 
         We use the current policy-model to map the environment observation,
         the state, to a probability distribution of the actions, and sample
@@ -71,7 +71,7 @@ class PolicyGradient(Agent):
         discounted_rewards = discounted_rewards[::-1]
 
         discounted_rewards = torch.tensor(discounted_rewards)
-        discounted_rewards = self.normalize_rewards(rewards=discounted_rewards)
+        discounted_rewards = self._normalize_rewards(rewards=discounted_rewards)
 
         states = torch.vstack(states)
         target_actions = F.one_hot(torch.tensor(actions), num_classes=self.size**2).float()

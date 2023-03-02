@@ -302,7 +302,7 @@ class TicTacToe(Environment):
                     print("Draw.")
 
             if not done:
-                action = int(input("Enter an index: "))
+                action = int(input(f"Enter an index between [0, {self.size**2 - 1}]: "))
                 state, reward, done = self.step(action=action, player=1)
 
                 print(self)
