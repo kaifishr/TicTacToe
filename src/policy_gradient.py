@@ -65,17 +65,13 @@ class PolicyGradient(Agent):
         reward_sum = 0.0
         discounted_rewards = []
 
-        # TODO: Get rid of for-loop
         for reward in rewards[::-1]:
             reward_sum = reward + self.gamma * reward_sum
             discounted_rewards.append(reward_sum)
-
-        discounted_rewards.reverse()
-        # discounted_rewards = discounted_rewards[::-1]
+        discounted_rewards = discounted_rewards[::-1]
 
         discounted_rewards = torch.tensor(discounted_rewards)
-
-        # self.normalize_rewards(rewards=discounted_rewards)
+        discounted_rewards = self.normalize_rewards(rewards=discounted_rewards)
 
         states = torch.vstack(states)
         target_actions = F.one_hot(torch.tensor(actions), num_classes=self.size**2).float()

@@ -115,7 +115,7 @@ def argument_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "-dp", "--dropout-probability",
         dest="dropout_probability",
-        default=0.1,
+        default=0.0,
         type=float
     )
 

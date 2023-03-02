@@ -24,7 +24,7 @@ class Agent:
             "reward": None
         }
 
-    def normalize_rewards(self, rewards: torch.Tensor, eps: float = 1e-05) -> torch.Tensor:
+    def _normalize_rewards(self, rewards: torch.Tensor, eps: float = 1e-05) -> torch.Tensor:
         """Normalizes rewards.
 
         Normalizes rewards if there is more than one reward 
@@ -41,7 +41,7 @@ class Agent:
             std = torch.std(rewards)
             if std != 0:
                 mean = torch.mean(rewards)
-                rewards = (rewards - mean) / (std + 1e-5)
+                rewards = (rewards - mean) / (std + eps)
         return rewards
 
     @staticmethod

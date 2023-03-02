@@ -83,27 +83,31 @@ class DeepQLearning(Agent):
         if self.epsilon > self.epsilon_min:
             self.epsilon *= self.decay_rate
 
+    @torch.no_grad()
     def _create_training_set(self) -> None:
         """Create training set from memory."""
 
         # Use subset of replay memory for training as transitions are strongly correlated.
         replay_batch = random.sample(self.memory, min(len(self.memory), self.batch_size))
 
-        # TODO: Normalize the rewards of sampled batch.
+        # Normalize the rewards of sampled batch.
+        rewards = torch.tensor([memory[2] for memory in replay_batch])
+        rewards = self._normalize_rewards(rewards=rewards)
+        for memory, reward in zip(replay_batch, rewards):
+            memory[2] = reward
 
         # Get states from replay buffer.
         states = torch.vstack([memory[0] for memory in replay_batch])
         new_states = torch.vstack([memory[3] for memory in replay_batch])
 
-        with torch.no_grad():
-            self.model.eval()
-            q_targets = self.model(states)
-            q_targets_new = self.model(new_states)
-            self.model.train()
+        self.model.eval()
+        q_targets = self.model(states)
+        q_targets_new = self.model(new_states)
+        self.model.train()
 
         for i, (_, action, reward, _, done) in enumerate(replay_batch):
             if not done:
-                q_targets[i, action] = reward + self.gamma * torch.amax(q_targets_new[i]).item()
+                q_targets[i, action] = reward + self.gamma * torch.amax(q_targets_new[i])
             else:
                 q_targets[i, action] = reward
 
