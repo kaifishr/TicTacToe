@@ -59,7 +59,7 @@ In this implementation, two agents alternate taking turns on an $m \times n$ boa
 
 ## Reinforcement Learning
 
-![](https://www.mathworks.com/help/reinforcement-learning/ug/agent_diagram.png)
+![https://www.mathworks.com/help/reinforcement-learning/ug/agent_diagram.png](https://www.mathworks.com/help/reinforcement-learning/ug/agent_diagram.png)
 
 This section is intended to give a very brief introduction to some aspects of reinforcement learning and the algorithms, [Policy Gradients](#policy-gradients) and [Deep Q-Learning](#deep-q-learning), that are used to train agents to play Tic-tac-toe.
 
@@ -224,21 +224,34 @@ $$
 
 It should be noted that the gradient estimates are unbiased but high in variance. To reduce the variance, other methods such as [control variates](https://en.wikipedia.org/wiki/Control_variates) or [actor critic](http://rail.eecs.berkeley.edu/deeprlcourse-fa17/f17docs/lecture_5_actor_critic_pdf).
 
+
 ### Deep Q-Learning
 
-TODO
+The goal of deep Q-learning is to learn the Q-function represented by a deep neural network. 
 
-- Learn a policy that maximizes the discounted reward for all states.
-- Here, we consider a deterministic policy
-- Since the policy is deterministic, we perform always the same action for a given state. 
-- If the policy is deterministic, we also know all future states and rewards.
-- Discounting the reward ensures that the total reward does not diverge in certain problems that can potentially go on forever (cart pole).
+For discrete action spaces with $n_{a}$ available actions to choose from ($n_{a} = 9$ actions for Tic-tac-toe), the Q-function maps a state $s$ to $n_{a}$ outputs predicting the Q-values $Q(s, a)$ for each action. This is in contrast to policy gradients, where the policy-network's output represents a probability distribution over a discrete action space. The policy $\pi$ determining the decision what action to take in state $s$, is given by the index associated with the network's maximal activated output neuron.
 
-$$
-r = r(s_0, a_0) + \gamma r(s_1, a_1) + \gamma^2 r(s_2, a_2) + \cdots
-$$
+If the network represents the true Q-function, then it satisfies the Bellman equation
 
-where $\gamma$ lives in the range $(0, 1)$ and is usually close to 1.
+$$Q(s,a) = r(s,a) + \gamma \mathbb{E}[Q(s', \pi(s'))]$$
+
+with policy $\pi$ representing the action that maximizes the expected reward starting with state $s$
+
+$$\pi = \argmax_{a} Q(s, a)$$
+
+As the randomly initialized neural network modeling the Q-function is far from representing the true Q-function, it does not satisfy the Bellman equation and thus a [temporal difference error](https://en.wikipedia.org/wiki/Temporal_difference_learning) $\epsilon$ exists
+
+$$\epsilon = r(s,a) + \gamma \mathbb{E}[Q(s', \pi(s'))] - Q(s,a)$$
+
+The objective is to learn the parameters of the neural network representing the Q-function by minimizing the temporal difference error over the entire trajectory using the mean squared error
+
+$$MSE = \frac{1}{2} \sum_{t=1}^{T} \epsilon_{t}^{2}$$
+
+The Q-function considered here represents a deterministic policy. A deterministic policy results in performing always the same actions given a fixed initial state preventing an exploration. To allow for some exploration, the selection of an action should contain some randomness using for example epsilon-greedy sampling for a non-deterministic trajectory.
+
+Another difference to policy gradients is that Q-learning separates exploration used to learn the Q-function and exploitation of the Q-funciton once learning is finished. In controst, policy gradients follows the current policy.
+
+A benefit of deep Q-learning is the possibility of updating the policy's parameters directly after each step (taking an action and observing the reward). This is in contrast to policy gradients, where the events of the decision process (states, actions, and rewards) are recorded an entire episode and the final reward has been observed before the policy update can be performed.
 
 
 ## References
