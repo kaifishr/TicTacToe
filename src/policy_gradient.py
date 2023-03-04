@@ -12,14 +12,14 @@ from src.agent import Agent
 
 class PolicyGradient(Agent):
     """Policy gradient agent.
-    
+
     Attributes:
         size:
         learning_rate:
         gamma:
         optimizer:
         criterion:
-    
+
     """
 
     def __init__(self, model: nn.Module, args) -> None:
@@ -47,7 +47,7 @@ class PolicyGradient(Agent):
         Returns:
             Sampled action represented by an integer.
         """
-        self.model.eval() 
+        self.model.eval()
         # Build the probability density function (PDF) for the given state.
         action_prob = self.model(state)
         # Sample action from the distribution (PDF).

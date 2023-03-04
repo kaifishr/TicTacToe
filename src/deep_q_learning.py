@@ -12,7 +12,7 @@ class DeepQLearning(Agent):
     """Deep Q-Learner.
 
     More class information.
-    
+
     Attributes:
         size:
         learning_rate:
@@ -45,7 +45,7 @@ class DeepQLearning(Agent):
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=self.learning_rate)
         self.criterion = nn.MSELoss()
 
-    @torch.no_grad() 
+    @torch.no_grad()
     def get_action(self, state: torch.Tensor) -> int:
         """Selects an action from a discrete action space.
 
@@ -115,7 +115,7 @@ class DeepQLearning(Agent):
 
     def train_on_batch(self, states: torch.Tensor, q_targets: torch.Tensor) -> float:
         """Performs single optimization step for batch of training data.
-        
+
         Args:
             states: Tensor holding states.
             q_targets: Tensor holding q-targets.
@@ -130,7 +130,7 @@ class DeepQLearning(Agent):
 
     def step(self, events: dict) -> None:
         """Runs single optimization step. Updates the network.
-        
+
         Args:
             events: Tuple holding events.
         """

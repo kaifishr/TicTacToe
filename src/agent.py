@@ -11,29 +11,25 @@ class Agent:
 
     Attributes:
         model: Policy network.
-    
+
     """
 
     def __init__(self, model: torch.nn.Module) -> None:
         """Initializes abstract learner class."""
         self.model = model
 
-        self.stats = {
-            "epsilon": None,
-            "loss": None,
-            "reward": None
-        }
+        self.stats = {"epsilon": None, "loss": None, "reward": None}
 
     def _normalize_rewards(self, rewards: torch.Tensor, eps: float = 1e-05) -> torch.Tensor:
         """Normalizes rewards.
 
-        Normalizes rewards if there is more than one reward 
+        Normalizes rewards if there is more than one reward
         and if standard-deviation is non-zeros.
-        
+
         Args:
             rewards: The agent's rewards.
             eps: Value added to the denominator for numerical stability.
-            
+
         Returns:
             Normalized rewards.
         """
@@ -47,7 +43,7 @@ class Agent:
     @staticmethod
     def print_events(events: dict) -> None:
         """Prints events in a better format.
-        
+
         Useful for debugging.
 
         Args:

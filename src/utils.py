@@ -49,14 +49,12 @@ def load_checkpoint(model: torch.nn.Module, args) -> None:
         model.load_state_dict(state_dict=state_dict)
         print(f"\nModel '{checkpoint_name}' loaded.\n")
     else:
-        warnings.warn(
-            f"\nModel checkpoint '{checkpoint_name}' not found. " "Continuing with random weights.\n"
-        )
+        warnings.warn(f"\nModel checkpoint '{checkpoint_name}' not found. " "Continuing with random weights.\n")
 
 
 def print_args(args) -> None:
     """Prints parsed arguments to console.
-    
+
     Args:
         args: Parsed arguments.
     """
@@ -69,7 +67,7 @@ def print_args(args) -> None:
 
 def eval(function: callable) -> callable:
     """Evaluation decorator for class methods.
-    
+
     Wraps function that calls a PyTorch module and ensures
     that inference is performed in evaluation model. Returns
     back to training mode after inference.
@@ -80,11 +78,12 @@ def eval(function: callable) -> callable:
     Returns:
         Decorated function.
     """
+
     @functools.wraps(function)
     def eval_wrapper(self, *args, **kwargs):
-        self.eval() 
+        self.eval()
         out = function(self, *args, **kwargs)
         self.train()
         return out
-    
+
     return eval_wrapper

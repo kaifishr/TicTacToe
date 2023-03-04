@@ -18,7 +18,7 @@ if __name__ == "__main__":
 
     args = argument_parser()
     print_args(args=args)
-    
+
     env = TicTacToe(size=args.field_size)
 
     if args.algorithm == "policy_gradient":
@@ -38,6 +38,4 @@ if __name__ == "__main__":
         train(env=env, agent_a=agent_a, agent_b=agent_b, args=args)
 
     else:
-        raise NotImplementedError(
-            f"Reinforcement algorithm {args.algorithm} not implemented"
-        )
+        raise NotImplementedError(f"Reinforcement algorithm {args.algorithm} not implemented")

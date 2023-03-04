@@ -31,14 +31,13 @@ class ResidualBlock(nn.Module):
 
 
 class Model(nn.Module):
-
     def __init__(self, args) -> None:
         """Initializes the model."""
         super().__init__()
 
         field_size = args.field_size
-        dims_state = field_size**2     
-        num_actions = field_size**2    
+        dims_state = field_size**2
+        num_actions = field_size**2
         hidden_features = args.num_hidden_units
         num_layers = args.num_layers
         prob_dropout = args.dropout_probability
@@ -51,23 +50,19 @@ class Model(nn.Module):
         ]
 
         hidden_layers = [
-            ResidualBlock(in_features=hidden_features, out_features=hidden_features, args=args) 
+            ResidualBlock(in_features=hidden_features, out_features=hidden_features, args=args)
             for _ in range(num_layers)
         ]
 
         output_layer = [
             nn.Linear(in_features=hidden_features, out_features=num_actions),
-            nn.Softmax(dim=-1) if args.algorithm == "policy_gradient" else nn.Identity()
+            nn.Softmax(dim=-1) if args.algorithm == "policy_gradient" else nn.Identity(),
         ]
 
-        self.model = nn.Sequential(
-            *input_layer,
-            *hidden_layers,
-            *output_layer
-        )
+        self.model = nn.Sequential(*input_layer, *hidden_layers, *output_layer)
 
     @eval
-    @torch.no_grad() 
+    @torch.no_grad()
     def predict(self, state: torch.Tensor) -> int:
         """Predicts action for given state.
 
