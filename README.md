@@ -59,7 +59,10 @@ In this implementation, two agents alternate taking turns on an $m \times n$ boa
 
 ## Reinforcement Learning
 
-![https://www.mathworks.com/help/reinforcement-learning/ug/agent_diagram.png](https://www.mathworks.com/help/reinforcement-learning/ug/agent_diagram.png)
+<center>
+<img src="https://www.mathworks.com/help/reinforcement-learning/ug/agent_diagram.png" alt="" width="320" height="">
+<figcaption>mathworks.com/help/reinforcement-learning/ug/agent_diagram.png </figcaption>
+</center>
 
 This section is intended to give a very brief introduction to some aspects of reinforcement learning and the algorithms, [Policy Gradients](#policy-gradients) and [Deep Q-Learning](#deep-q-learning), that are used to train agents to play Tic-tac-toe.
 
@@ -107,20 +110,20 @@ The state that the agent observes are the positions of crosses ($\times = 1$), c
 $$
 \begin{aligned}
 &\begin{array}{c|c|c}
-\circ &  & \circ \\
-\hline
-& \times &  \\
-\hline
-\circ & \times & \times \\
-\end{array}
-\end{aligned} =
-\begin{aligned}
-&\begin{array}{c|c|c}
 -1 & 0 & -1 \\
 \hline
 0 & 1 & 0 \\
 \hline
 -1 & 1 & 1 \\
+\end{array}
+\end{aligned} = 
+\begin{aligned}
+&\begin{array}{c|c|c}
+\circ &  & \circ \\
+\hline
+& \times &  \\
+\hline
+\circ & \times & \times \\
 \end{array}
 \end{aligned}
 $$
