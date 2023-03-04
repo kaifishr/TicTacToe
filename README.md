@@ -59,10 +59,14 @@ In this implementation, two agents alternate taking turns on an $m \times n$ boa
 
 ## Reinforcement Learning
 
-<center>
+<p align="center">
 <img src="https://www.mathworks.com/help/reinforcement-learning/ug/agent_diagram.png" alt="" width="320" height="">
-<figcaption>mathworks.com/help/reinforcement-learning/ug/agent_diagram.png </figcaption>
-</center>
+<figcaption>
+<font size="1">
+mathworks.com/help/reinforcement-learning/ug/agent_diagram.png 
+</font>
+</figcaption>
+</p>
 
 This section is intended to give a very brief introduction to some aspects of reinforcement learning and the algorithms, namely [policy gradients](#policy-gradients) and [deep Q-learning](#deep-q-learning), that are used to train agents to play tic-tac-toe.
 
@@ -240,7 +244,7 @@ $$Q(s,a) = r(s,a) + \gamma \mathbb{E}[Q(s', \pi(s'))]$$
 
 with policy $\pi$ representing the action that maximizes the expected reward starting with state $s$
 
-$$\pi = \argmax_{a} Q(s, a)$$
+$$\pi = \text{argmax}_{a} Q(s, a)$$
 
 As the randomly initialized neural network modeling the Q-function is far from representing the true Q-function, it does not satisfy the Bellman equation, and thus a [temporal difference error](https://en.wikipedia.org/wiki/Temporal_difference_learning) $\epsilon$ exists
 
